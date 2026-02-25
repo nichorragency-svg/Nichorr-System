@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outreach & Deal | Nichorr AI</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --neon-blue: #38bdf8; --neon-red: #ef4444; --neon-green: #22c55e;
+            --dark-bg: #030712; --card-bg: rgba(30, 41, 59, 0.7); 
+        }
+        
+        body { 
+            background: var(--dark-bg); color: white; font-family: 'Inter', sans-serif; margin: 0; 
+            background-image: radial-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* --- Header & Stats (UNCHANGED) --- */
+        .top-bar {
+            background: rgba(3, 7, 18, 0.95); backdrop-filter: blur(15px);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--neon-red); position: sticky; top: 0; z-index: 1000;
+        }
+        .logo-section { display: flex; align-items: center; gap: 12px; }
+        .logo-box { 
+            width: 45px; height: 45px; background: var(--neon-red); border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.5rem; font-weight: 900; font-family: 'Orbitron';
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+        .target-display { font-family: 'Orbitron'; color: var(--neon-blue); font-weight: 900; font-size: 1.2rem; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { 
+            background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);
+            text-align: center; border-bottom: 3px solid var(--neon-blue);
+        }
+        .stat-card small { color: #94a3b8; text-transform: uppercase; font-size: 10px; font-weight: bold; letter-spacing: 1px; }
+        .stat-card h2 { margin: 8px 0 0; font-family: 'Orbitron'; font-size: 1.8rem; }
+
+        /* --- Outreach Engine Vertical Split --- */
+        .engine-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Half screen split */
+            gap: 25px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .engine-left { display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Ad Column */
+        .engine-right { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+            border-left: 1px solid rgba(255,255,255,0.1);
+            padding-left: 25px;
+        }
+        .ad-box {
+            flex: 1;
+            background: rgba(255,255,255,0.02);
+            border: 1px dashed #334155;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .panel-title { font-family: 'Orbitron'; font-size: 1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; color: var(--neon-blue); }
+
+        .site-preview {
+            width: 100%; height: 200px; background: #1e293b; border-radius: 15px;
+            overflow: hidden; border: 1px solid var(--neon-blue);
+            display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        .site-preview img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+
+        .input-box {
+            width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid #334155;
+            border-radius: 8px; color: white; box-sizing: border-box;
+        }
+        .pitch-area {
+            background: rgba(255,255,255,0.03); border: 1px dashed var(--neon-blue);
+            padding: 15px; border-radius: 12px; font-size: 0.9rem; line-height: 1.6;
+        }
+
+        /* Reply Tab & Client Section */
+        .reply-tab {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--neon-red);
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .client-section {
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid var(--neon-blue);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .btn {
+            padding: 12px 20px; border-radius: 8px; border: none; font-weight: 800; font-family: 'Orbitron';
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.8rem;
+        }
+        .btn-red { background: var(--neon-red); color: white; width: 100%; }
+        .btn-blue { background: var(--neon-blue); color: var(--dark-bg); width: 100%; }
+        .btn-ghost { background: transparent; border: 1px solid #334155; color: #94a3b8; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; background: var(--neon-blue); color: var(--dark-bg); }
+
+        @media (max-width: 900px) {
+            .engine-container { grid-template-columns: 1fr; }
+            .engine-right { border-left: none; padding-left: 0; height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo-section">
+        <div class="logo-box">N</div>
+        <div style="font-family:'Orbitron';">NICHORR <span style="color:var(--neon-red)">AI</span></div>
+    </div>
+    <div class="target-display" id="headerDomain">DOMAIN.COM</div>
+    <div style="display: flex; gap: 10px;">
+        <button onclick="NichorrExport.excel(mockData)" class="btn btn-ghost">📊 Excel</button>
+        <button onclick="NichorrExport.pdf(mockData)" class="btn btn-ghost">📄 PDF</button>
+        <a href="dashboard.html" class="btn btn-ghost">✖ Close</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="stats-grid">
+        <div class="stat-card"><small>Domain Authority</small><h2 id="daVal">48</h2></div>
+        <div class="stat-card"><small>Domain Rating</small><h2 id="drVal">55</h2></div>
+        <div class="stat-card"><small>Monthly Traffic</small><h2 id="trafficVal">120K</h2></div>
+        <div class="stat-card"><small>Est. Link Value</small><h2 id="costVal" style="color:var(--neon-green)">$168</h2></div>
+    </div>
+
+    <div class="engine-container">
+        
+        <div class="engine-left">
+            <div class="panel-title">
+                <span>🚀 OUTREACH ENGINE</span>
+                <span class="badge">AI POWERED</span>
+            </div>
+
+            <div class="site-preview">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Site Preview">
+                <div style="position:absolute; bottom:10px; left:15px;" class="badge">LIVE PREVIEW</div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <label style="font-size:0.7rem; font-weight:bold; color:var(--neon-blue);">RECIPIENT ADMIN EMAIL</label>
+                <span style="font-size: 0.6rem; color: #94a3b8;">Status: Ready</span>
+            </div>
+            <input type="text" id="adminEmail" class="input-box" value="webmaster@site.com">
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="panel-title" style="font-size:0.8rem; margin-bottom: 0;">📝 EMAIL PITCH PREVIEW</div>
+                <button onclick="rotateEmail()" class="btn btn-ghost" style="padding: 4px 8px; font-size: 10px; border-color: var(--neon-blue); color: var(--neon-blue);">🔄 Shuffle</button>
+            </div>
+
+            <div class="pitch-area" id="pitchPreview">
+                Generating professional pitch...
+            </div>
+
+            <button class="btn btn-red" onclick="alert('Pitch Sent!')">📧 SEND SECURE PITCH</button>
+
+            <div class="reply-tab">
+                <div class="panel-title" style="font-size:0.8rem; color:var(--neon-red);">📩 INBOX REPLIES</div>
+                <div style="height: 80px; overflow-y: auto; font-size: 0.8rem; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 5px;">
+                    <span style="color:var(--neon-blue)">Admin:</span> Hi, we can accept a guest post for $150.
+                </div>
+            </div>
+
+            <div class="client-section">
+                <div class="panel-title" style="font-size:0.8rem;">🤝 CLIENT SYSTEM</div>
+                <select class="input-box" style="margin-bottom: 10px;">
+                    <option>-- Select Nichorr Client --</option>
+                    <option>Client: John Doe</option>
+                </select>
+                <button class="btn btn-blue">🔗 CONNECT TO DEAL</button>
+            </div>
+        </div>
+
+        <div class="engine-right">
+            <div class="ad-box">
+                <strong>ADVERTISEMENT SLOT 1</strong><br>
+                (Vertical Banner 300x600)
+            </div>
+            <div class="ad-box">
+                <strong>ADVERTISEMENT SLOT 2</strong><br>
+                (Premium Partner Ad)
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- Pitch Rotation Logic ---
+    function rotateEmail() {
+        const t = ["Hi, I'm interested in a collaboration...", "Hello, I saw your site and loved the content...", "Greetings, would you accept a guest post?"];
+        document.getElementById('pitchPreview').innerText = t[Math.floor(Math.random()*t.length)];
+    }
+    
+    // --- Mock Data & Export Logic (Unchanged) ---
+    const mockData = [{ websiteUrl: "techcrunch.com", authorityScore: 90, spamScore: 1 }];
+    const NichorrExport = {
+        excel: (data) => { alert("Exporting Excel..."); },
+        pdf: (data) => { alert("Exporting PDF..."); }
+    };
+    window.onload = rotateEmail;
+</script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Audit | Nichorr AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { 
+            --neon-red: #ef4444; --neon-blue: #38bdf8; --neon-green: #22c55e;
+            --neon-purple: #a855f7; --dark-bg: #030712; --card-bg: rgba(30, 41, 59, 0.7); 
+        }
+        body { background: var(--dark-bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        
+        .top-bar {
+            background: rgba(3, 7, 18, 0.95); backdrop-filter: blur(15px);
+            padding: 15px 40px; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center;
+            border-bottom: 2px solid var(--neon-red); position: sticky; top: 0; z-index: 1000;
+        }
+
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo-box { 
+            width: 55px; height: 55px; background: var(--neon-red); border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 2rem; font-weight: 900; font-family: 'Orbitron';
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); border: 1px solid white;
+        }
+        .brand-text h1 { margin: 0; font-family: 'Orbitron'; font-size: 1.1rem; letter-spacing: 1px; }
+
+        .target-center { text-align: center; }
+        .target-center #targetDomain { 
+            font-family: 'Orbitron'; color: var(--neon-blue); font-size: 1.5rem; 
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5); font-weight: 900;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        .tab-bar { 
+            display: flex; gap: 10px; margin: 30px 0; background: var(--dark-bg); 
+            position: sticky; top: 87px; z-index: 999; padding: 10px 0;
+        }
+        .tab-btn { 
+            flex: 1; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid #1e293b; 
+            color: #94a3b8; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; border-radius: 10px;
+        }
+        .tab-btn.active { background: rgba(239, 68, 68, 0.1); color: var(--neon-red); border-color: var(--neon-red); }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .big-card { background: var(--card-bg); border-radius: 20px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-group { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        
+        .insight-box {
+            background: rgba(56, 189, 248, 0.05); border-left: 4px solid var(--neon-blue);
+            padding: 20px; margin-top: 20px; border-radius: 0 15px 15px 0; font-style: italic; color: #cbd5e1;
+        }
+
+        .fix-btn {
+            display: block; width: 100%; padding: 20px; margin-top: 30px;
+            background: linear-gradient(90deg, var(--neon-red), #b91c1c);
+            color: white; border: none; border-radius: 15px; font-family: 'Orbitron';
+            font-weight: 900; font-size: 1.2rem; cursor: pointer; text-align: center; text-decoration: none;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo-section">
+        <div class="logo-box">N</div>
+        <div class="brand-text"><h1>NICHORR AI</h1></div>
+    </div>
+    <div class="target-center"><div id="targetDomain">DOMAIN.COM</div></div>
+    <div style="text-align: right;"><button onclick="history.back()" style="background:transparent; color:#94a3b8; border:1px solid #334155; padding:8px 15px; border-radius:8px; cursor:pointer;">← Back</button></div>
+</header>
+
+<div class="container">
+    <nav class="tab-bar">
+        <button class="tab-btn active" onclick="openTab(event, 'traffic')">TRAFFIC</button>
+        <button class="tab-btn" onclick="openTab(event, 'geo')">GEOGRAPHY</button>
+        <button class="tab-btn" onclick="openTab(event, 'seo')">SEO</button>
+        <button class="tab-btn" onclick="openTab(event, 'health')">SITE HEALTH</button>
+    </nav>
+
+    <div id="traffic" class="tab-content active">
+        <div class="metrics-grid">
+            <div class="big-card">
+                <h3 style="color:var(--neon-blue); font-family:'Orbitron';">Monthly Visits</h3>
+                <div style="font-size:3rem; font-weight:900;">460.7K</div>
+                <div style="height:250px;"><canvas id="trafficChart"></canvas></div>
+            </div>
+            <div class="big-card">
+                <h3 style="color:var(--neon-red); font-family:'Orbitron';">Engagement</h3>
+                <div class="stat-group"><span>Bounce Rate</span><strong>50.05%</strong></div>
+                <div class="stat-group"><span>Pages/Visit</span><strong>2.11</strong></div>
+                <div class="stat-group"><span>Duration</span><strong>00:00:47</strong></div>
+                <div style="height:150px;"><canvas id="deviceChart"></canvas></div>
+            </div>
+        </div>
+        <div class="insight-box"><strong>AI Insight:</strong> Traffic is stable. High desktop usage suggests B2B intent.</div>
+    </div>
+
+    <div id="geo" class="tab-content">
+        <div class="metrics-grid">
+            <div class="big-card">
+                <h3 style="font-family:'Orbitron';">Top Countries</h3>
+                <div class="stat-group"><span>🇺🇸 USA</span><strong>45%</strong></div>
+                <div class="stat-group"><span>🇬🇧 UK</span><strong>12%</strong></div>
+                <div class="stat-group"><span>🇨🇦 Canada</span><strong>8%</strong></div>
+                <div class="stat-group"><span>🇮🇳 India</span><strong>5%</strong></div>
+            </div>
+            <div class="big-card">
+                <h3 style="font-family:'Orbitron';">Channel Split</h3>
+                <div style="height:250px;"><canvas id="geoChart"></canvas></div>
+            </div>
+        </div>
+        <div class="insight-box"><strong>AI Insight:</strong> Tier-1 traffic is dominant. High potential for high-ticket ads.</div>
+    </div>
+
+    <div id="seo" class="tab-content">
+        <div class="metrics-grid">
+            <div class="big-card">
+                <h3 style="color:var(--neon-green); font-family:'Orbitron';">Organic Growth</h3>
+                <div style="font-size:2.5rem; font-weight:900;">12,480 Keywords</div>
+                <div style="height:250px;"><canvas id="seoChart"></canvas></div>
+            </div>
+            <div class="big-card">
+                <h3 style="color:var(--neon-purple); font-family:'Orbitron';">Authority</h3>
+                <div class="stat-group"><span>DR (Ahrefs)</span><strong>48</strong></div>
+                <div class="stat-group"><span>DA (Moz)</span><strong>42</strong></div>
+                <div class="stat-group"><span>Traffic Value</span><strong>$14.2K</strong></div>
+                <div style="height:150px;"><canvas id="backlinkChart"></canvas></div>
+            </div>
+        </div>
+        <div class="insight-box"><strong>AI Insight:</strong> Backlink profile is strong, but missing "Niche Edits" in the last 3 months.</div>
+    </div>
+
+    <div id="health" class="tab-content">
+        <div class="metrics-grid">
+            <div class="big-card" style="text-align:center;">
+                <h3 style="font-family:'Orbitron';">Health Score</h3>
+                <div style="font-size:5rem; color:var(--neon-green); font-weight:900;">84</div>
+                <p>Spam Score: <span style="color:var(--neon-red)">1%</span></p>
+            </div>
+            <div class="big-card">
+                <h3 style="font-family:'Orbitron';">Issues</h3>
+                <div class="stat-group"><span>404 Errors</span><strong>12</strong></div>
+                <div class="stat-group"><span>SSL</span><strong>Active</strong></div>
+            </div>
+        </div>
+        <a href="inventory.html" class="fix-btn">FIX ISSUES & CONTACT ADMIN ⚡</a>
+    </div>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('targetDomain').innerText = (params.get('domain') || 'NICHORR.AI').toUpperCase();
+
+    function openTab(evt, tabName) {
+        let contents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < contents.length; i++) contents[i].style.display = "none";
+        let btns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < btns.length; i++) btns[i].className = btns[i].className.replace(" active", "");
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+
+    // Traffic Chart
+    new Chart(document.getElementById('trafficChart'), { type: 'line', data: { labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb'], datasets: [{ data: [300, 400, 350, 420, 460], borderColor: '#38bdf8', fill: true, backgroundColor: 'rgba(56, 189, 248, 0.1)' }] }, options: opt });
+    // Device Chart
+    new Chart(document.getElementById('deviceChart'), { type: 'doughnut', data: { labels: ['Desktop', 'Mobile'], datasets: [{ data: [70, 30], backgroundColor: ['#ef4444', '#1e293b'], borderWidth: 0 }] }, options: opt });
+    // Geo Chart
+    new Chart(document.getElementById('geoChart'), { type: 'bar', data: { labels: ['Direct', 'Organic', 'Social'], datasets: [{ data: [40, 50, 10], backgroundColor: '#38bdf8' }] }, options: opt });
+    // SEO Chart
+    new Chart(document.getElementById('seoChart'), { type: 'line', data: { labels: ['W1', 'W2', 'W3', 'W4'], datasets: [{ data: [8000, 10000, 11500, 12480], borderColor: '#22c55e' }] }, options: opt });
+    // Backlink Chart
+    new Chart(document.getElementById('backlinkChart'), { type: 'bar', data: { labels: ['Aug', 'Sep', 'Oct', 'Nov'], datasets: [{ data: [100, 150, 130, 180], backgroundColor: '#a855f7' }] }, options: opt });
+</script>
+</body>
+</html>

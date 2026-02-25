@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nichorr Admin | Control Center</title>
+    <link rel="stylesheet" href="/NichorrTheme.css">
+    <style>
+        body { display: flex; min-height: 100vh; background: #020617; }
+        .sidebar { width: 260px; background: rgba(15, 23, 42, 0.9); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; }
+        .nav-item { padding: 15px; color: #94a3b8; text-decoration: none; display: block; border-radius: 12px; margin-bottom: 10px; font-weight: 600; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { background: #3b82f6; color: white; }
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 30px; margin-bottom: 30px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-box { padding: 20px; text-align: center; }
+        .stat-box h3 { margin: 0; font-size: 2rem; color: #3b82f6; }
+        .stat-box p { margin: 5px 0 0; color: #94a3b8; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
+        .trend-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .tag { background: #10b981; color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; }
+        .btn-write { background: #3b82f6; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+        table { width: 100%; border-collapse: collapse; color: #cbd5e1; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .btn-delete { color: #ef4444; cursor: pointer; font-weight: bold; background: none; border: none; }
+        @media (max-width: 900px) { body { flex-direction: column; } .sidebar { width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2 style="color: white; margin-bottom: 40px;">Nichorr <span style="color:#3b82f6;">Admin</span></h2>
+        <a href="#" class="nav-item active">📊 Dashboard</a>
+        <a href="/manual-post.html" class="nav-item">📝 Create Post</a>
+        <a href="/add-ebook.html" class="nav-item">📚 E-Books</a>
+        <a href="#radar" class="nav-item">📡 Trend Radar</a>
+        <hr style="opacity: 0.1; margin: 20px 0;">
+        <a href="/index.html" class="nav-item">← View Site</a>
+    </aside>
+
+    <main class="main-content">
+        <div class="stat-grid">
+            <div class="glass-card stat-box">
+                <h3 id="blogCount">...</h3>
+                <p>Total Insights</p>
+            </div>
+            <div class="glass-card stat-box">
+                <h3 id="ebookCount">...</h3>
+                <p>E-Books</p>
+            </div>
+            <div class="glass-card stat-box">
+                <h3 id="linkCount">...</h3>
+                <p>Scanned Links</p>
+            </div>
+        </div>
+
+        <section id="radar">
+            <h2 style="margin-bottom: 20px;">📡 Global Trend Radar</h2>
+            <div class="glass-card">
+                <div id="trendList">
+                    <p style="color:#94a3b8;">Scanning global tool directories...</p>
+                </div>
+            </div>
+        </section>
+
+        <section style="margin-top: 40px;">
+            <h2>📑 Manage All Posts</h2>
+            <div class="glass-card" style="padding: 10px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blogTableBody">
+                        <tr><td colspan="3" style="text-align:center;">Loading posts...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section style="margin-top: 40px;">
+            <h2>🔐 User Plan Manager</h2>
+            <div class="glass-card" style="max-width: 500px;">
+                <input type="email" id="userEmail" placeholder="User Email" style="width:100%; padding:12px; margin-bottom:15px; background:#0f172a; border:1px solid #334155; color:white; border-radius:10px;">
+                <select id="userPlan" style="width:100%; padding:12px; margin-bottom:15px; background:#0f172a; border:1px solid #334155; color:white; border-radius:10px;">
+                    <option value="pro">Pro Hunter (500 Credits)</option>
+                    <option value="agency">Agency (Unlimited)</option>
+                </select>
+                <input type="password" id="adminSecret" placeholder="Admin Secret Key" style="width:100%; padding:12px; margin-bottom:15px; background:#0f172a; border:1px solid #334155; color:white; border-radius:10px;">
+                <button onclick="updateRights()" style="width:100%; padding:12px; background:#3b82f6; border:none; color:white; border-radius:10px; font-weight:bold;">Update Access</button>
+                <p id="statusMsg" style="margin-top:10px; font-size:0.8rem;"></p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 1. Load Trends from Real Backend
+        async function fetchTrends() {
+            try {
+                const resp = await fetch('/api/admin/trends');
+                const data = await resp.json();
+                const list = document.getElementById('trendList');
+                
+                if(data.success && data.trends.length > 0) {
+                    list.innerHTML = '';
+                    data.trends.forEach(trend => {
+                        list.innerHTML += `
+                            <div class="trend-item">
+                                <div>
+                                    <strong style="display:block;">${trend.title} <span class="tag">Trend</span></strong>
+                                    <small style="color:#64748b;">${trend.contentSnippet?.substring(0, 100) || 'New tool launch detected.'}...</small>
+                                </div>
+                                <button class="btn-write" onclick="askGemini('${trend.title}')">Write Article</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    list.innerHTML = '<p style="color:#94a3b8;">No new trends found in the last 24h.</p>';
+                }
+            } catch (e) {
+                document.getElementById('trendList').innerHTML = '<p style="color:#ef4444;">Radar connection failed.</p>';
+            }
+        }
+
+        // 2. Load Stats & Blog Table
+        async function loadDashboardData() {
+            try {
+                // Fetch Stats
+                const statResp = await fetch('/api/admin/stats');
+                const statData = await statResp.json();
+                if(statData.success) {
+                    document.getElementById('blogCount').innerText = statData.stats.blogs;
+                    document.getElementById('ebookCount').innerText = statData.stats.ebooks;
+                    document.getElementById('linkCount').innerText = statData.stats.links;
+                }
+
+                // Fetch Blogs for Table
+                const blogResp = await fetch('/api/blogs');
+                const blogData = await blogResp.json();
+                const tableBody = document.getElementById('blogTableBody');
+                
+                if(blogData.success && blogData.blogs.length > 0) {
+                    tableBody.innerHTML = '';
+                    blogData.blogs.forEach(blog => {
+                        tableBody.innerHTML += `
+                            <tr>
+                                <td>${blog.title}</td>
+                                <td>${new Date(blog.date).toLocaleDateString()}</td>
+                                <td><button class="btn-delete" onclick="deleteBlog('${blog._id}')">Delete</button></td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No posts found.</td></tr>';
+                }
+            } catch (e) { console.error("Load Error:", e); }
+        }
+
+        // 3. Delete Blog Logic
+        async function deleteBlog(id) {
+            if(!confirm("Are you sure?")) return;
+            try {
+                const resp = await fetch(`/api/blogs/delete/${id}`, { method: 'DELETE' });
+                const res = await resp.json();
+                if(res.success) {
+                    alert("Deleted!");
+                    loadDashboardData();
+                }
+            } catch (e) { alert("Delete failed!"); }
+        }
+
+        // 4. Update User Rights
+        async function updateRights() {
+            const email = document.getElementById('userEmail').value;
+            const plan = document.getElementById('userPlan').value;
+            const secret = document.getElementById('adminSecret').value;
+            const status = document.getElementById('statusMsg');
+
+            try {
+                const resp = await fetch('/api/nichorr/admin/upgrade-user', { // Adjust based on your actual route
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, plan, secret })
+                });
+                const data = await resp.json();
+                status.innerText = data.message;
+                status.style.color = data.success ? "#10b981" : "#ef4444";
+            } catch (e) { status.innerText = "Error updating user."; }
+        }
+
+        function askGemini(toolName) {
+            alert("Lala, abhi Gemini ko message bhejo: 'Nichorr ke liye " + toolName + " par article likho'.");
+        }
+
+        // Initialize Everything
+        window.onload = () => {
+            fetchTrends();
+            loadDashboardData();
+        };
+    </script>
+</body>
+</html>

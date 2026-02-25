@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nichorr | E-Books Store</title>
+    <link rel="stylesheet" href="/NichorrTheme.css">
+    <style>
+        body { background-color: #020617; color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 50px; }
+        
+        /* Ad Placeholder Styling */
+        .ad-slot {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 20px auto;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .header-ad { height: 90px; }
+        .footer-ad { height: 200px; }
+
+        .header-glass { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); max-width: 800px; margin: 20px auto; border-radius: 24px; }
+        .header-glass h1 { font-size: 2.5rem; margin: 0; letter-spacing: -1px; }
+        .header-glass h1 span { color: #3b82f6; text-shadow: 0 0 15px rgba(59, 130, 246, 0.6); }
+        
+        /* Navigation Button */
+        .nav-bar { max-width: 800px; margin: 20px auto; display: flex; justify-content: flex-start; }
+        .btn-nav { background: rgba(30, 41, 59, 0.6); color: #94a3b8; padding: 10px 18px; border-radius: 12px; text-decoration: none; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .btn-nav:hover { background: #3b82f6; color: white; }
+
+        .controls-box { max-width: 800px; margin: 0 auto 40px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        .search-container { width: 100%; position: relative; }
+        .search-bar { width: 100%; padding: 16px 25px; border-radius: 15px; background: rgba(15, 23, 42, 0.9); border: 1px solid #1e293b; color: white; outline: none; transition: 0.4s; box-sizing: border-box; }
+        .btn-add { background: #10b981; color: white; padding: 12px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+
+        .ebook-container { display: flex; flex-direction: column; align-items: center; gap: 25px; padding: 0 20px; }
+        .ebook-card { background: rgba(30, 41, 59, 0.3); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; width: 100%; max-width: 800px; display: grid; grid-template-columns: 220px 1fr; overflow: hidden; transition: 0.3s ease; }
+        .ebook-card:hover { border-color: #3b82f6; background: rgba(30, 41, 59, 0.5); }
+        .ebook-img-box { position: relative; width: 220px; height: 100%; }
+        .ebook-img { width: 100%; height: 100%; object-fit: cover; }
+        .niche-badge { position: absolute; top: 15px; left: 15px; background: rgba(59, 130, 246, 0.9); padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+        .ebook-content { padding: 25px; display: flex; flex-direction: column; }
+        .rating { color: #fbbf24; margin-bottom: 5px; font-size: 0.85rem; }
+        .writer-name { color: #3b82f6; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
+        .ebook-title { font-size: 1.6rem; margin: 0 0 10px; color: #fff; }
+        .ebook-desc { color: #94a3b8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
+        .action-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .price { font-size: 1.4rem; color: #10b981; font-weight: 800; }
+        .btn-group { display: flex; gap: 8px; }
+        .btn { padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; border: none; font-size: 0.8rem; transition: 0.2s; }
+        .btn-buy { background: #3b82f6; color: white; }
+        .btn-view { background: rgba(255, 255, 255, 0.1); color: white; }
+        .btn-del { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        
+        @media (max-width: 650px) { .ebook-card { grid-template-columns: 1fr; } .ebook-img-box { width: 100%; height: 250px; } }
+    </style>
+</head>
+<body>
+
+    <div class="ad-slot header-ad">Advertisement - Leaderboard (728x90)</div>
+
+    <div class="nav-bar">
+        <a href="../../dashboard.html" class="btn-nav">← Back to Dashboard</a>
+    </div>
+
+    <div class="header-glass">
+        <h1>NICHORR <span>E-BOOKS</span></h1>
+    </div>
+
+    <div class="controls-box">
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search by title, niche or author...">
+        </div>
+        <a href="add-ebook.html" class="btn-add">+ Add New E-Book</a>
+    </div>
+
+    <div class="ebook-container" id="ebookList">
+        <p style="color: #64748b;">Fetching premium assets...</p>
+    </div>
+
+    <div class="ad-slot footer-ad">Advertisement - Bottom Banner (728x200)</div>
+
+<script>
+    async function loadBooks() {
+        try {
+            const response = await fetch('/api/blogs/get-ebooks');
+            const result = await response.json();
+
+            if (result.success) {
+                const container = document.getElementById('ebookList');
+                container.innerHTML = ""; 
+
+                if (result.data.length === 0) {
+                    container.innerHTML = "<p>No E-books found. Start by adding your first asset.</p>";
+                    return;
+                }
+
+                result.data.forEach(book => {
+                    const imgPath = book.imageurl ? book.imageurl : 'https://via.placeholder.com/220x300?text=No+Cover';
+                    
+                    container.innerHTML += `
+                        <div class="ebook-card" data-niche="${book.niche}">
+                            <div class="ebook-img-box">
+                                <span class="niche-badge">${book.niche || 'General'}</span>
+                                <img src="${imgPath}" class="ebook-img" onerror="this.src='https://via.placeholder.com/220x300'">
+                            </div>
+                            <div class="ebook-content">
+                                <div class="rating">⭐⭐⭐⭐⭐ (5.0)</div>
+                                <div class="writer-name">By ${book.writer || 'Nichorr Team'}</div>
+                                <h2 class="ebook-title">${book.title}</h2>
+                                <p class="ebook-desc">${book.desc ? book.desc.substring(0, 120) + '...' : 'No description provided.'}</p>
+                                <div class="action-row">
+                                    <span class="price">$${book.price || '0.00'}</span>
+                                    <div class="btn-group">
+                                        <a href="book-details.html?id=${book._id}" class="btn btn-view">View</a>
+                                        <a href="#" class="btn btn-buy">Buy Now</a>
+                                        <button class="btn btn-del" onclick="handleDelete('${book._id}')">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            }
+        } catch (err) {
+            console.error("Fetch Error:", err);
+            document.getElementById('ebookList').innerHTML = "<p>Error loading assets. Please check connection.</p>";
+        }
+    }
+
+    async function handleDelete(id) {
+        // Confirmation in English
+        if (confirm("Are you sure you want to delete this e-book permanently?")) {
+            try {
+                const response = await fetch(`/api/blogs/delete-ebook/${id}`, { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) {
+                    alert("System: Asset Deleted Successfully.");
+                    loadBooks();
+                }
+            } catch (err) {
+                alert("Error: System failed to delete the asset.");
+            }
+        }
+    }
+
+    document.querySelector('.search-bar').addEventListener('input', function(e) {
+        let term = e.target.value.toLowerCase();
+        let books = document.querySelectorAll('.ebook-card');
+        books.forEach(book => {
+            let text = book.innerText.toLowerCase();
+            book.style.display = text.includes(term) ? "grid" : "none";
+        });
+    });
+
+    window.onload = loadBooks;
+</script>
+</body>
+</html>

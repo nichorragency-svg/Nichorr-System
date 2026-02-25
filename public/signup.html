@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Nichorr AI | Secure Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-red: #ef4444;
+            --dark-bg: #030712;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--dark-bg); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0;
+            color: white;
+        }
+
+        /* Glassmorphism Card */
+        .card { 
+            background: rgba(255, 255, 255, 0.03); 
+            padding: 40px; 
+            border-radius: 24px; 
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+            width: 100%; 
+            max-width: 380px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            text-align: center;
+        }
+
+        h2 { font-family: 'Orbitron', sans-serif; color: #fff; margin-bottom: 10px; letter-spacing: 1px; }
+        
+        input { 
+            width: 100%; padding: 14px; margin: 12px 0; 
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); 
+            background: rgba(0,0,0,0.2); color: white;
+            outline: none; transition: 0.3s; 
+        }
+
+        input:focus { border-color: var(--neon-red); box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+
+        button { 
+            width: 100%; padding: 15px; 
+            background: linear-gradient(135deg, var(--neon-red) 0%, #991b1b 100%); 
+            color: white; border: none; border-radius: 12px; 
+            font-weight: 700; font-family: 'Orbitron', sans-serif;
+            cursor: pointer; transition: 0.3s; margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5); }
+        
+        .login-link { margin-top: 25px; font-size: 13px; color: #94a3b8; }
+        .login-link a { color: var(--neon-red); text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="/images/nichorr-logo.png" style="width: 60px; margin-bottom: 15px;" alt="Logo">
+        <h2>MISSION <span style="color: var(--neon-red);">START</span></h2>
+        <p style="font-size: 14px; color: #94a3b8; margin-bottom: 25px;">Activate your AI-powered site audits.</p>
+        
+        <input type="text" id="fullName" placeholder="Full Name">
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="password" placeholder="Create Password">
+        
+        <button onclick="handleSignup()" id="signupBtn">ACCESS ENGINE</button>
+        
+        <div class="login-link">
+            Authorized Personnel? <a href="/login.html">Login Here</a>
+        </div>
+    </div>
+    </body>
+</html>

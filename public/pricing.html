@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans | Nichorr AI Premium</title>
+    <style>
+        :root { --primary: #0f172a; --accent: #38bdf8; --success: #22c55e; }
+        body { 
+            font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px; 
+            background-color: #f8fafc; color: #1e293b;
+            background-image: radial-gradient(#38bdf8 0.5px, #f8fafc 0.5px);
+            background-size: 20px 20px;
+        }
+
+        .nav-back { max-width: 1000px; margin: 0 auto 30px; text-align: left; }
+        .btn-back { text-decoration: none; color: var(--primary); font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 5px; }
+
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 { font-size: 36px; font-weight: 900; margin-bottom: 10px; }
+        .header p { color: #64748b; font-size: 18px; }
+
+        .pricing-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 25px; max-width: 1000px; margin: auto; 
+        }
+
+        .card { 
+            background: white; padding: 40px 30px; border-radius: 24px; 
+            border: 1px solid #e2e8f0; text-align: center; transition: 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(15,23,42,0.1); border-color: var(--accent); }
+        
+        .card.popular { border: 2.5px solid var(--accent); }
+        .popular-badge { 
+            background: var(--accent); color: var(--primary); font-size: 11px; font-weight: 900;
+            padding: 5px 20px; position: absolute; top: 15px; right: -25px; transform: rotate(45deg);
+        }
+
+        .plan-name { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #64748b; }
+        .price { font-size: 48px; font-weight: 900; margin: 20px 0; color: var(--primary); }
+        .price span { font-size: 16px; color: #94a3b8; }
+
+        .features { list-style: none; padding: 0; margin: 30px 0; text-align: left; }
+        .features li { margin-bottom: 12px; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        .features li::before { content: "✓"; color: var(--success); font-weight: 900; }
+
+        .btn-buy { 
+            display: block; width: 100%; padding: 15px; border-radius: 12px; 
+            text-decoration: none; font-weight: 700; transition: 0.3s;
+            background: var(--primary); color: white;
+        }
+        .btn-buy:hover { opacity: 0.9; }
+        .btn-accent { background: var(--accent); color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="nav-back">
+        <a href="/index.html" class="btn-back">← Back to Dashboard</a>
+    </div>
+
+    <div class="header">
+        <h1>Scalable Pricing for <span style="color: var(--accent);">Hunters</span></h1>
+        <p>No hidden fees. Just pure SEO intelligence.</p>
+    </div>
+
+    <div class="pricing-grid">
+        <div class="card">
+            <div class="plan-name">Starter</div>
+            <div class="price">$0<span>/mo</span></div>
+            <ul class="features">
+                <li>5 AI Audits Per Month</li>
+                <li>Single URL Analysis</li>
+                <li>Basic Authority Metrics</li>
+                <li>Asset DB Storage</li>
+            </ul>
+            <a href="/index.html" class="btn-buy" style="background: #e2e8f0; color: #64748b;">Current Plan</a>
+        </div>
+
+        <div class="card popular">
+            <div class="popular-badge">POPULAR</div>
+            <div class="plan-name">Pro Hunter</div>
+            <div class="price">$29<span>/mo</span></div>
+            <ul class="features">
+                <li>500 AI Audits Per Month</li>
+                <li><b>Bulk URL Processing</b></li>
+                <li>Full CSV Data Export</li>
+                <li>Priority Engine Access</li>
+            </ul>
+            <a href="https://wa.me/923040704668?text=Salam%20,%20I%20want%20to%20upgrade%20to%20the%20*Pro%20Hunter%20Plan*%20on%20Nichorr%20AI." class="btn-buy btn-accent">Upgrade to Pro ⚡</a>
+        </div>
+
+        <div class="card">
+            <div class="plan-name">Agency</div>
+            <div class="price">$99<span>/mo</span></div>
+            <ul class="features">
+                <li>Unlimited AI Audits</li>
+                <li>Team Collaboration</li>
+                <li>API Access (Beta)</li>
+                <li>Custom White-label Reports</li>
+            </ul>
+            <a href="https://wa.me/923040704668?text=Salam%20,%20I%20am%20interested%20in%20the%20*Agency%20Plan*%20for%20Nichorr%20AI.%20Please%20share%20details." class="btn-buy">Contact Sales</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nichorr Insights | Premium SEO Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        
+        .ad-slot { background: rgba(255, 255, 255, 0.03); border: 1px dashed rgba(255, 255, 255, 0.1); color: #475569; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin: 20px auto; border-radius: 12px; }
+        .header-ad { width: 95%; max-width: 1300px; height: 90px; }
+
+        .blog-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px; max-width: 1300px; margin: 0 auto; flex-wrap: wrap; gap: 15px; }
+        .btn-link { text-decoration: none; font-weight: bold; font-size: 0.75rem; letter-spacing: 1px; padding: 10px 18px; border-radius: 12px; transition: 0.3s; text-transform: uppercase; cursor: pointer; border:none; }
+        .btn-back { color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); background: rgba(30, 41, 59, 0.5); }
+        .btn-red { background: #ef4444; color: white; }
+        .btn-blue { background: #3b82f6; color: white; }
+
+        header { text-align: center; padding: 30px 20px; }
+        header h1 { font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: -2px; margin: 0; }
+        header h1 span { color: #3b82f6; text-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+
+        /* Newsletter Box */
+        .newsletter-container { max-width: 800px; margin: 0 auto 20px; padding: 20px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 16px; text-align: center; }
+        .newsletter-input { padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; width: 60%; }
+
+        /* Category Filters */
+        .filter-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 15px; border-radius: 20px; background: #1e293b; border: 1px solid #334155; color: #94a3b8; cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
+        .filter-btn:hover, .filter-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+
+        .search-container { max-width: 800px; margin: 0 auto 15px; padding: 0 20px; }
+        .search-bar { width: 100%; padding: 16px; background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; color: white; border-radius: 16px; font-size: 1rem; outline: none; box-sizing: border-box; backdrop-filter: blur(10px); }
+
+        .blog-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+
+        .blog-card { background: rgba(30, 41, 59, 0.3); backdrop-filter: blur(15px); border-radius: 24px; overflow: hidden; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.08); }
+        .img-container { width: 100%; aspect-ratio: 16 / 9; overflow: hidden; }
+        .blog-image { width: 100%; height: 100%; object-fit: cover; }
+        
+        .blog-body { padding: 25px; }
+        .blog-title { font-size: 1.6rem; margin: 15px 0; font-weight: 800; color: #fff; line-height: 1.3; }
+        .blog-content { font-size: 0.95rem; line-height: 1.6; color: #cbd5e1; margin-bottom: 20px; }
+
+        /* Social Share Icons */
+        .share-icons { display: flex; gap: 12px; margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
+        .share-icons a { color: #94a3b8; font-size: 1.1rem; transition: 0.3s; }
+        .share-icons a:hover { color: #3b82f6; }
+
+        .delete-btn { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+
+        @media (max-width: 900px) { 
+            .blog-layout { grid-template-columns: 1fr; } 
+            .sidebar-box { display: none; } 
+            .newsletter-input { width: 100%; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ad-slot header-ad">Advertisement - 728x90</div>
+
+    <nav class="blog-nav">
+        <a href="/dashboard.html" class="btn-link btn-back">← Dashboard</a>
+        <div class="nav-buttons">
+            <button onclick="alert('System: Premium SEO Guides are being prepared. Stay tuned!')" class="btn-link btn-blue">📚 E-Books</button>
+            <a href="add-post.html" class="btn-link btn-red">+ Create Post</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>NICHORR <span>INSIGHTS</span></h1>
+        <p style="color: #94a3b8; margin-top: 10px;">The Ultimate SEO & Publisher Intelligence</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="🔍 Search premium database...">
+    </div>
+
+    <div class="newsletter-container">
+        <h4 style="margin:0 0 10px 0; font-size: 0.9rem; color: #3b82f6;">SUBSCRIBE FOR SEO TIPS</h4>
+        <input type="email" class="newsletter-input" placeholder="Enter your email...">
+        <button class="btn-link btn-blue" style="padding: 8px 20px;">JOIN</button>
+    </div>
+
+    <div class="filter-container">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">SEO</button>
+        <button class="filter-btn">Guest Post</button>
+        <button class="filter-btn">AI Tips</button>
+    </div>
+
+    <div class="blog-layout">
+        <main id="blogFeed">
+            <p style="text-align:center; color:#94a3b8;">Scanning database...</p>
+        </main>
+
+        <aside class="sidebar-box">
+            <div class="ad-slot" style="width: 100%; height: 600px;">Vertical Sidebar Ad<br>300x600</div>
+        </aside>
+    </div>
+
+<script>
+    async function deletePost(postId) {
+        if(!confirm("System: Delete this permanently?")) return;
+        try {
+            const response = await fetch(`/api/blogs/delete/${postId}`, { method: 'DELETE' });
+            if((await response.json()).success) { location.reload(); }
+        } catch (err) { alert("Error deleting post."); }
+    }
+
+    async function loadBlogs() {
+        const feed = document.getElementById('blogFeed');
+        try {
+            const response = await fetch('/api/blogs');
+            const data = await response.json();
+            if (data.success && data.blogs.length > 0) {
+                feed.innerHTML = '';
+                data.blogs.forEach((blog, index) => {
+                    const date = new Date(blog.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const postUrl = window.location.origin + "/blog-details.html?id=" + blog._id;
+                    
+                    feed.innerHTML += `
+                        <article class="blog-card">
+                            <div class="img-container">
+                                <img src="${blog.imageurl || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f'}" class="blog-image">
+                            </div>
+                            <div class="blog-body">
+                                <span style="color:#3b82f6; font-size:0.7rem; font-weight:bold; text-transform:uppercase;">${blog.category || 'SEO'}</span>
+                                <h2 class="blog-title">${blog.title}</h2>
+                                <div style="color:#64748b; font-size:0.8rem; margin-bottom:15px;">📅 ${date} | 👤 ADMIN</div>
+                                <div class="blog-content">${blog.content.substring(0, 150).replace(/<[^>]*>?/gm, '')}...</div>
+                                
+                                <div class="share-icons">
+                                    <span style="font-size:0.7rem; color:#475569; margin-right:5px;">SHARE:</span>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=${postUrl}" target="_blank"><i class="fab fa-facebook"></i></a>
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${postUrl}" target="_blank"><i class="fab fa-linkedin"></i></a>
+                                    <a href="https://api.whatsapp.com/send?text=${postUrl}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                                </div>
+
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                                    <a href="blog-details.html?id=${blog._id}" style="color:#3b82f6; font-weight:800; text-decoration:none; font-size:0.9rem;">READ INSIGHT →</a>
+                                    <button class="delete-btn" onclick="deletePost('${blog._id}')">Delete</button>
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                    if((index + 1) % 2 === 0) { feed.innerHTML += `<div class="ad-slot" style="height:100px;">In-Feed Ad</div>`; }
+                });
+            }
+        } catch (error) { feed.innerHTML = '<p style="text-align:center; color:red;">Connection Error.</p>'; }
+    }
+    window.onload = loadBlogs;
+</script>
+</body>
+</html>

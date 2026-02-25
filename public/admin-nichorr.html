@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nichorr AI | Admin Access</title>
+    <style>
+        :root { --primary: #0f172a; --accent: #38bdf8; --error: #ef4444; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #f8fafc; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .admin-box { 
+            width: 100%;
+            max-width: 450px; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 { text-align: center; color: var(--primary); margin-top: 0; }
+        
+        .field-group { margin-bottom: 20px; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 700; 
+            font-size: 13px; 
+            color: #475569;
+            text-transform: uppercase;
+        }
+
+        input, select { 
+            width: 100%; 
+            padding: 14px; 
+            border: 2px solid #f1f5f9; 
+            border-radius: 12px; 
+            box-sizing: border-box; 
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+            background: #f8fafc;
+        }
+
+        input:focus, select:focus { border-color: var(--accent); background: white; }
+
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover { background: #1e293b; transform: translateY(-1px); }
+
+        #statusMsg { 
+            margin-top: 20px; 
+            text-align: center; 
+            font-size: 14px; 
+            font-weight: 700; 
+            min-height: 20px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-box">
+    <h2>Lala Admin Panel 🔐</h2>
+    <p style="text-align: center; font-size: 13px; color: #64748b; margin-bottom: 30px;">Upgrade User Plan & Credits</p>
+    
+    <div class="field-group">
+        <label>User Email Address</label>
+        <input type="email" id="userEmail" placeholder="customer@email.com">
+    </div>
+
+    <div class="field-group">
+        <label>Assign Plan</label>
+        <select id="userPlan">
+            <option value="free">Free Starter (5 Credits)</option>
+            <option value="pro">Pro Hunter (500 Credits)</option>
+            <option value="agency">Agency (Unlimited)</option>
+        </select>
+    </div>
+
+    <div class="field-group">
+        <label>Admin Secret Key</label>
+        <input type="password" id="adminSecret" placeholder="Enter Secret Code">
+    </div>
+
+    <button onclick="updateRights()">Update User Access</button>
+    
+    <div id="statusMsg"></div>
+    
+    <a href="/index.html" class="back-link">← Back to Dashboard</a>
+</div>
+
+<script>
+    async function updateRights() {
+        const email = document.getElementById('userEmail').value.trim();
+        const plan = document.getElementById('userPlan').value;
+        const secret = document.getElementById('adminSecret').value;
+        const msg = document.getElementById('statusMsg');
+
+        if(!email || !secret) {
+            msg.innerText = "❌ Email and Secret Key required!";
+            msg.style.color = "red";
+            return;
+        }
+
+        msg.innerText = "Processing...";
+        msg.style.color = "orange";
+
+        try {
+            // Updated Endpoint to match your Controller
+            const resp = await fetch('/api/nichorr/admin/upgrade-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, plan, secret })
+            });
+            
+            const res = await resp.json();
+            
+            if(res.success) {
+                msg.innerText = "✅ " + res.message;
+                msg.style.color = "green";
+                // Form clear kar dein
+                document.getElementById('userEmail').value = "";
+                document.getElementById('adminSecret').value = "";
+            } else {
+                msg.innerText = "❌ Error: " + res.message;
+                msg.style.color = "red";
+            }
+        } catch (e) {
+            msg.innerText = "❌ Connection Failed. Check Backend!";
+            msg.style.color = "red";
+        }
+    }
+</script>
+
+</body>
+</html>

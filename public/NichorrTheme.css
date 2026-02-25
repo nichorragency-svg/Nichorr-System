@@ -1,0 +1,30 @@
+/* --- NICHORR GLOBAL THEME VARIABLES --- */
+:root {
+    --bg-main: #020617; /* Deep Midnight Black */
+    --bg-gradient: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+    --accent-blue: #3b82f6;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --glass-bg: rgba(30, 41, 59, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+/* --- GLOBAL BODY SETTINGS --- */
+body {
+    background: var(--bg-main);
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* Glass Effect Utility */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+}

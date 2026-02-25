@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Details | Nichorr Premium</title>
+    <link rel="stylesheet" href="/NichorrTheme.css">
+    <style>
+        body { background-color: #020617; color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; }
+        
+        /* Ad Placeholder Styling */
+        .ad-slot {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 20px auto;
+            border-radius: 12px;
+        }
+        .header-ad { width: 100%; max-width: 1000px; height: 90px; }
+        .sidebar-ad { width: 160px; height: 600px; position: sticky; top: 20px; }
+        .footer-ad { width: 100%; max-width: 1000px; height: 250px; }
+
+        /* Main Layout Wrapper */
+        .main-wrapper {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        /* Back Button Styling */
+        .back-nav {
+            max-width: 1000px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+        }
+        .btn-back {
+            background: rgba(30, 41, 59, 0.5);
+            color: #94a3b8;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+        }
+        .btn-back:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            background: rgba(30, 41, 59, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .preview-section { position: sticky; top: 20px; }
+        .book-cover { width: 100%; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; object-fit: cover; }
+        .page-teaser { background: #f8fafc; color: #334155; padding: 20px; border-radius: 12px; font-size: 0.8rem; line-height: 1.4; height: 200px; overflow: hidden; position: relative; }
+        .page-teaser::after { content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background: linear-gradient(transparent, #f8fafc); }
+        .teaser-label { font-weight: bold; color: #3b82f6; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        
+        .info-section { display: flex; flex-direction: column; }
+        .niche-tag { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 5px 15px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; width: fit-content; margin-bottom: 15px; }
+        .book-title { font-size: 2.5rem; margin: 0 0 10px; line-height: 1.2; }
+        .writer { font-size: 1.1rem; color: #94a3b8; margin-bottom: 20px; }
+        .rating { color: #fbbf24; font-size: 1rem; margin-bottom: 30px; }
+        .description-box { color: #cbd5e1; line-height: 1.8; font-size: 1rem; margin-bottom: 30px; white-space: pre-wrap; }
+        
+        .pricing-card { background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; padding: 25px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; }
+        .price-tag { font-size: 2rem; font-weight: 800; color: #10b981; }
+        .buy-btn { background: #3b82f6; color: white; padding: 15px 35px; border-radius: 12px; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .buy-btn:hover { background: #2563eb; transform: scale(1.05); }
+        .lock-notice { margin-top: 20px; display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 0.85rem; }
+
+        @media (max-width: 1100px) {
+            .sidebar-ad { display: none; }
+            .main-wrapper { justify-content: center; }
+        }
+        @media (max-width: 850px) {
+            .container { grid-template-columns: 1fr; padding: 20px; }
+            .preview-section { position: relative; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ad-slot header-ad">Advertisement - Top Leaderboard (728x90)</div>
+
+    <div class="back-nav">
+        <a href="ebooks.html" class="btn-back">← Back to Asset Store</a>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="container" id="detailsContainer">
+            <h2 style="text-align: center; width: 100%;">Loading Data...</h2>
+        </div>
+
+        <div class="ad-slot sidebar-ad">Ad - Skyscraper (160x600)</div>
+    </div>
+
+    <div class="ad-slot footer-ad">Advertisement - Bottom Banner (970x250)</div>
+
+<script>
+    async function loadBookDetails() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = urlParams.get('id');
+
+        if (!bookId) {
+            document.getElementById('detailsContainer').innerHTML = "<h2>Error: ID Missing!</h2>";
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/blogs/get-ebooks');
+            const result = await response.json();
+
+            if (result.success) {
+                const book = result.data.find(b => b._id === bookId);
+
+                if (!book) {
+                    document.getElementById('detailsContainer').innerHTML = "<h2>Asset Not Found!</h2>";
+                    return;
+                }
+
+                document.getElementById('detailsContainer').innerHTML = `
+                    <div class="preview-section">
+                        <img src="${book.imageurl || 'https://via.placeholder.com/500x700'}" class="book-cover" alt="Cover">
+                        <div class="page-teaser">
+                            <span class="teaser-label">Asset Summary</span>
+                            <p><strong>Overview:</strong></p>
+                            <p>${book.desc.substring(0, 150)}...</p>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <span class="niche-tag">${book.niche ? book.niche.toUpperCase() : 'PREMIUM'}</span>
+                        <h1 class="book-title">${book.title}</h1>
+                        <div class="writer">By ${book.writer || 'Nichorr Team'}</div>
+                        <div class="rating">⭐⭐⭐⭐⭐ 5.0 (Global Rating)</div>
+
+                        <div class="description-box">${book.desc}</div>
+
+                        <div class="pricing-card">
+                            <div class="price-info">
+                                <span style="display: block; font-size: 0.8rem; color: #94a3b8;">Full License</span>
+                                <span class="price-tag">$${book.price}</span>
+                            </div>
+                            <a href="${book.pdfLink || '#'}" target="_blank" class="buy-btn">Unlock Now</a>
+                        </div>
+
+                        <div class="lock-notice">
+                            <span>🔒</span>
+                            <span>Secure transaction. Digital delivery via email.</span>
+                        </div>
+                    </div>
+                `;
+                document.title = `${book.title} | Nichorr Premium`;
+            }
+        } catch (err) {
+            document.getElementById('detailsContainer').innerHTML = "<h2>Connection Error</h2>";
+        }
+    }
+    window.onload = loadBookDetails;
+</script>
+</body>
+</html>
