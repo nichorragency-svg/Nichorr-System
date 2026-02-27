@@ -17,6 +17,7 @@ const upload = multer({ storage: storage });
 // --- 2. Blog Schema & Model ---
 const blogSchema = new mongoose.Schema({
     title: { type: String, required: true },
+    slug: { type: String },
     category: { type: String, default: "SEO" },
     author: { type: String, default: "Nichorr Engine" },
     content: { type: String, default: "" },
@@ -87,8 +88,12 @@ router.post('/manual', upload.single('blogImage'), async (req, res) => {
             finalImage = `/uploads/${req.file.filename}`;
         }
 
+        // Title se slug banane ka asaan tareeqa
+        const generatedSlug = title.toLowerCase().split(' ').join('-');
+
         const newPost = new Blog({
             title,
+            slug: generatedSlug, // Ab database khush rahe ga
             category,
             content,
             imageurl: finalImage,
@@ -99,7 +104,7 @@ router.post('/manual', upload.single('blogImage'), async (req, res) => {
         res.json({ success: true, message: "Blog Published!" });
     } catch (err) {
         console.error("Blog Save Error:", err);
-        res.status(500).json({ success: false, message: "Server Error: Post Failed" });
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 
