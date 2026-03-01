@@ -1,14 +1,9 @@
 {
   "version": 2,
-  "name": "nichorr-system",
   "builds": [
     {
       "src": "server.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -18,7 +13,8 @@
     },
     {
       "src": "/(.*)",
-      "dest": "public/$1"
+      "dest": "/public/$1",
+      "check": true
     }
   ]
 }
