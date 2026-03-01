@@ -159,6 +159,13 @@
                 </div>
 
                 <div class="input-row">
+    <label>Smart Hashtag Library (Click to Add)</label>
+    <div id="hashtagLibrary" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; background: rgba(15, 23, 42, 0.4); padding: 15px; border-radius: 12px; border: 1px solid #334155;">
+        </div>
+    <input type="text" id="selectedTags" name="tags" placeholder="Hashtags will appear here..." style="font-size: 0.8rem; color: #38bdf8; border-color: rgba(56, 189, 248, 0.3);">
+</div>
+
+                <div class="input-row">
                     <label>Article Body (HTML Supported)</label>
                     <textarea name="content" placeholder="Paste your HTML content here..." required></textarea>
                 </div>
@@ -168,7 +175,64 @@
         </div>
     </div>
 
+    
 <script>
+    // 1. Hashtag Data Bank
+const nichorrHashtags = {
+    "SEO Strategy": "#SEO #Backlinks #OrganicGrowth #NichorrAI #SearchRanking",
+    "Technology": "#TechTrends #Innovation #Software #FutureTech #TechUpdate",
+    "Marketing": "#DigitalMarketing #MarketingTips #Branding #GrowthHacking",
+    "Case Study": "#CaseStudy #BusinessAnalysis #DataDriven #SuccessStory",
+    "AI Tools": "#ArtificialIntelligence #AITools #Automation #MachineLearning #SmartTech"
+};
+
+const hashtagLibrary = document.getElementById('hashtagLibrary');
+const tagInput = document.getElementById('selectedTags');
+const contentArea = document.querySelector('textarea[name="content"]');
+
+// 2. Buttons banane ka function
+// 2. Buttons banane ka function (FIXED)
+function loadTags(category) {
+    hashtagLibrary.innerHTML = ""; // Purane tags saaf karein
+    tagInput.value = ""; // Input box bhi clear karein
+    
+    const tags = nichorrHashtags[category] || "#Nichorr #AI #Automation";
+    const tagArray = tags.split(' ');
+
+    tagArray.forEach(tag => {
+        const span = document.createElement('span');
+        span.innerText = tag;
+        span.style = "background: #1e293b; color: #38bdf8; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; border: 1px solid #334155; transition: 0.3s; user-select: none;";
+        
+        // Click karne par Textarea AUR Input dono update honge
+        span.onclick = () => {
+            // Check karein agar tag pehle se add toh nahi
+            if(!tagInput.value.includes(tag)) {
+                // 1. Content Area (Article Body) mein add karein
+                contentArea.value += "\n" + tag; 
+                
+                // 2. Selected Tags wale input box mein bhi add karein
+                tagInput.value += (tagInput.value ? " " : "") + tag;
+
+                // Visual Feedback
+                span.style.background = "#38bdf8";
+                span.style.color = "#0f172a";
+                span.style.borderColor = "white";
+            }
+        };
+
+        hashtagLibrary.appendChild(span);
+    });
+}
+
+// 3. Category change hone par tags badalna
+document.querySelector('select[name="category"]').onchange = (e) => {
+    loadTags(e.target.value);
+};
+
+// Pehli dafa load hone par
+loadTags("SEO Strategy");
+
 document.getElementById('manualPostForm').onsubmit = async (e) => {
     e.preventDefault();
     const btn = e.target.querySelector('button');
