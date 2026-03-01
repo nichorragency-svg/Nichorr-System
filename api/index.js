@@ -22,29 +22,36 @@ app.use(express.static('public'));
 // Images ko browser mein access karne ke liye link
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads'))); 
 
-// --- 3. Database Connection & Server Logic ---
+// --- 3. Database Connection ---
 const cloudURI = "mongodb+srv://nichorr-agency:Nichorr123456@ammad.6mbkige.mongodb.net/Nichorr_System?retryWrites=true&w=majority&appName=Ammad";
 const mongoURI = process.env.MONGO_URI || cloudURI;
 
-mongoose.connect(mongoURI)
-    .then(() => {
+// Vercel ke liye connection handle karna
+let isConnected = false;
+
+const connectDB = async () => {
+    if (isConnected) return;
+    try {
+        await mongoose.connect(mongoURI);
+        isConnected = true;
         console.log('✅ Nichorr AI Database Connected!');
-        // VERCEL FIX: Local par chaly ga toh listen kary ga, Vercel khud handle kary ga
-        if (process.env.NODE_ENV !== 'production') {
-            app.listen(PORT, () => {
-                console.log(`🚀 Nichorr Engine Live On Port ${PORT}`);
-            });
-        }
-        
-        // Hunter Service
-        setTimeout(() => { 
-            if (typeof startHunting === 'function') {
-                console.log("📡 Starting Nichorr Hunter Service...");
-                startHunting(); 
-            }
-        }, 5000);
-    })
-    .catch((err) => console.error('❌ Connection Error:', err.message));
+    } catch (err) {
+        console.error('❌ Connection Error:', err.message);
+    }
+};
+
+// Middleware to connect DB on every request (Vercel style)
+app.use(async (req, res, next) => {
+    await connectDB();
+    next();
+});
+
+// Port ko delete kar den ya sirf local ke liye rakhen
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => console.log(`🚀 Live on ${PORT}`));
+}
+
+module.exports = app;
 
 // --- 4. API Endpoints ---
 // Saare Admin, Auth aur Audit routes yahan handle honge
