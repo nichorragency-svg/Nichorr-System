@@ -22,24 +22,27 @@ app.use(express.static('public'));
 // Images ko browser mein access karne ke liye link
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads'))); 
 
-// --- 3. Database Connection ---
+// --- 3. Database Connection & Server Logic ---
 const cloudURI = "mongodb+srv://nichorr-agency:Nichorr123456@ammad.6mbkige.mongodb.net/Nichorr_System?retryWrites=true&w=majority&appName=Ammad";
 const mongoURI = process.env.MONGO_URI || cloudURI;
 
 mongoose.connect(mongoURI)
     .then(() => {
         console.log('✅ Nichorr AI Database Connected!');
-        app.listen(PORT, () => {
-            console.log(`🚀 Nichorr Engine Live On Port ${PORT}`);
-            
-            // Hunter ko tab start karna jab DB connect ho jaye
-            setTimeout(() => { 
-                if (typeof startHunting === 'function') {
-                    console.log("📡 Starting Nichorr Hunter Service...");
-                    startHunting(); 
-                }
-            }, 5000);
-        });
+        // VERCEL FIX: Local par chaly ga toh listen kary ga, Vercel khud handle kary ga
+        if (process.env.NODE_ENV !== 'production') {
+            app.listen(PORT, () => {
+                console.log(`🚀 Nichorr Engine Live On Port ${PORT}`);
+            });
+        }
+        
+        // Hunter Service
+        setTimeout(() => { 
+            if (typeof startHunting === 'function') {
+                console.log("📡 Starting Nichorr Hunter Service...");
+                startHunting(); 
+            }
+        }, 5000);
     })
     .catch((err) => console.error('❌ Connection Error:', err.message));
 
