@@ -170,6 +170,7 @@
         </div>
     </div>
 
+    <script src="/js/inventory-api.js"></script>
     <script>
         let masterData = [];
         let savedClients = [];
@@ -351,29 +352,9 @@
             });
 
             try {
-                const res = await fetch('/api/nichorr/send-email', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: client.clientEmail,
-                        clientName: client.clientName,
-                        selectedAssets: currentTableData,
-                        websiteLink: "https://nichorraiapp.com"
-                    })
-                });
-                const result = await res.json();
-                alert(result.message);
-            } catch (error) { alert("Email failed!"); }
-        }
-
-        async function updateManualEmail(id, newEmail) {
-            try {
-                await fetch('/api/nichorr/update-outreach-status', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: id, email: newEmail })
-                });
-            } catch (err) { console.error("Update fail"); }
+                const result = await mailToClientReport(client, currentTableData);
+                alert(result.message || (result.success ? 'Report sent.' : 'Email failed.'));
+            } catch (error) { alert('Email failed!'); }
         }
 
         async function exportToCSV() {

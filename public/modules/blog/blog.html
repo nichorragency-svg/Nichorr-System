@@ -118,7 +118,7 @@
             if (data.success && data.blogs.length > 0) {
                 feed.innerHTML = '';
                 data.blogs.forEach((blog, index) => {
-                    const date = new Date(blog.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const date = new Date(blog.createdAt || blog.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const postUrl = window.location.origin + "/blog-details.html?id=" + blog._id;
                     
                     feed.innerHTML += `

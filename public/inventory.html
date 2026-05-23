@@ -168,6 +168,7 @@
         </div>
     </div>
 
+    <script src="/js/inventory-api.js"></script>
     <script>
         let masterData = [];
         let savedClients = [];
@@ -331,35 +332,12 @@ function getStatusColor(status) {
             });
 
             try {
-                const res = await fetch('/api/client/send-email', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: client.clientEmail,
-                        clientName: client.clientName,
-                        selectedAssets: currentTableData,
-                        websiteLink: "https://nichorraiapp.com"
-                    })
-                });
-
-                const result = await res.json();
-                alert(result.message);
+                const result = await mailToClientReport(client, currentTableData);
+                alert(result.message || (result.success ? 'Report sent.' : 'Email failed.'));
             } catch (error) {
-                alert("Email failed!");
+                alert('Email failed!');
             }
         }
-
-        // 🍋 Email Save karne wala function (Isko bhi Script mein add karein)
-async function updateManualEmail(id, newEmail) {
-    try {
-        await fetch('/api/nichorr/update-outreach-status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id, email: newEmail })
-        });
-        console.log("Email Updated!");
-    } catch (err) { console.error("Update fail"); }
-}
         async function exportToCSV() {
             if(masterData.length === 0) return alert("Data empty hai!");
             let csv = "URL,DA,Value\n";
