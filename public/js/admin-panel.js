@@ -17,8 +17,8 @@ async function fetchTrends() {
             </div>`).join('');
         list.querySelectorAll('[data-topic]').forEach((btn) => {
             btn.addEventListener('click', () => {
-                document.getElementById('aiTopic').value = btn.dataset.topic;
-                document.getElementById('aiWriter').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('publishTopic').value = btn.dataset.topic;
+                document.getElementById('publisherSection').scrollIntoView({ behavior: 'smooth' });
             });
         });
     } catch (e) {
@@ -90,32 +90,40 @@ async function updateRights() {
     }
 }
 
-async function generateAiArticle(e) {
+async function publishArticle(e) {
     e.preventDefault();
-    const topic = document.getElementById('aiTopic').value.trim();
-    const category = document.getElementById('aiCategory').value;
-    const btn = document.getElementById('aiSubmitBtn');
-    const loading = document.getElementById('aiLoading');
+    const title = document.getElementById('publishTopic').value.trim();
+    const category = document.getElementById('publishCategory').value;
+    const content = document.getElementById('articleContent').value.trim();
+    const btn = document.getElementById('publishBtn');
+    const loading = document.getElementById('publishLoading');
+    const imageInput = document.getElementById('blogImage');
 
-    if (!topic) return showToast('Enter a topic.', 'error');
+    if (!title) return showToast('Enter a topic or title.', 'error');
+    if (!content) return showToast('Paste article content before publishing.', 'error');
 
     btn.disabled = true;
     loading.hidden = false;
 
-    try {
-        const resp = await fetch('/api/blogs/generate-ai', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ topic, category })
-        });
-        const data = await resp.json();
-        if (!data.success) throw new Error(data.message || 'Generation failed');
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('category', category);
+    formData.append('content', content);
+    formData.append('excerpt', content.slice(0, 160));
+    if (imageInput.files[0]) formData.append('blogImage', imageInput.files[0]);
 
-        showToast(`Published: ${data.blog.title}`, 'success');
-        document.getElementById('aiTopic').value = '';
+    try {
+        const resp = await fetch('/api/blogs/manual', { method: 'POST', body: formData });
+        const data = await resp.json();
+        if (!data.success) throw new Error(data.message || 'Publish failed');
+
+        showToast(`Published: ${title}`, 'success');
+        document.getElementById('publishTopic').value = '';
+        document.getElementById('articleContent').value = '';
+        imageInput.value = '';
         loadDashboardData();
     } catch (err) {
-        showToast(err.message || 'AI generation failed.', 'error');
+        showToast(err.message || 'Could not save article.', 'error');
     } finally {
         btn.disabled = false;
         loading.hidden = true;
@@ -138,7 +146,7 @@ function escapeAttr(s) {
     return String(s).replace(/"/g, '&quot;');
 }
 
-document.getElementById('aiForm').addEventListener('submit', generateAiArticle);
+document.getElementById('publisherForm').addEventListener('submit', publishArticle);
 document.getElementById('upgradeBtn').addEventListener('click', updateRights);
 window.addEventListener('load', () => {
     fetchTrends();
