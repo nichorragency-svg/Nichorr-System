@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nichorr AI | Asset Inventory</title>
+    
+    <style>
+        :root { --primary: #0f172a; --accent: #38bdf8; --success: #22c55e; --danger: #ef4444; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 10px; color: #1e293b;
+            background-color: #f8fafc;
+            background-image: radial-gradient(#38bdf8 0.8px, transparent 0.8px), radial-gradient(#38bdf8 0.8px, #f8fafc 0.8px);
+            background-size: 30px 30px; background-position: 0 0, 15px 15px;
+        }
+
+        .container { max-width: 1100px; margin: auto; position: relative; z-index: 1; }
+        
+        /* Brand Header */
+        .header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 20px; padding: 15px; background: white;
+            border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-area img { height: 40px; border-radius: 5px; }
+        .header h1 { font-size: 22px; margin: 0; color: var(--primary); }
+
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        
+        /* Client Selector Section */
+        .client-box {
+            background: #0f172a; color: white; padding: 20px; border-radius: 12px;
+            margin-bottom: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 15px; align-items: center;
+        }
+
+        /* Stats Section */
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { 
+            background: white; padding: 15px; border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: center; border: 1px solid #e2e8f0;
+        }
+        .stat-card span { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+        .stat-card h2 { margin: 5px 0 0; font-size: 20px; color: var(--primary); }
+
+        /* Filters */
+        .filter-area {
+            background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px;
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; border: 1px solid #e2e8f0;
+        }
+        .filter-area input, .filter-area select, .client-box select {
+            padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; width: 100%;
+        }
+
+        /* Table */
+        .table-container { background: white; border-radius: 12px; overflow-x: auto; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { background: #f1f5f9; color: var(--primary); padding: 12px; text-align: left; font-size: 11px; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+        /* Buttons */
+        .btn { 
+            padding: 10px 18px; border: none; border-radius: 8px; font-weight: 600; 
+            cursor: pointer; transition: 0.2s; font-size: 13px; display: flex; align-items: center; gap: 5px; justify-content: center;
+        }
+        .btn-mail { background: var(--accent); color: var(--primary); }
+        .btn-csv { background: var(--success); color: white; }
+        .btn-back { background: #f1f5f9; color: var(--primary); text-decoration: none; }
+        .btn-add { background: white; color: var(--primary); }
+        .btn-clear { background: var(--danger); color: white; } /* Naya Button Style */
+
+        /* Modal Style */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; }
+
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+        .badge-safe { background: #dcfce7; color: #166534; }
+        .badge-risk { background: #fee2e2; color: #991b1b; }
+
+        @media (max-width: 600px) {
+            .filter-area, .client-box { grid-template-columns: 1fr; }
+            .header { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area">
+                <img src="https://via.placeholder.com/40x40?text=N" alt="Nichorr AI">
+                <h1>Asset Inventory</h1>
+            </div>
+            <div class="btn-group">
+                <a href="/" class="btn btn-back">← Back</a>
+                <button onclick="clearInventory()" class="btn btn-clear">🗑️ Clear List</button>
+                <button onclick="exportToCSV()" class="btn btn-csv">📥 Export CSV</button>
+            </div>
+        </div>
+
+        <div class="client-box">
+            <div>
+                <label style="font-size: 11px; text-transform: uppercase; font-weight: bold; opacity: 0.8;">Select Nichorr Client</label>
+                <select id="clientDropdown">
+                    <option value="">-- No Client Selected --</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: flex-end;">
+                <button onclick="openModal()" class="btn btn-add">+ New</button>
+                <button onclick="mailToClient()" class="btn btn-mail" style="flex-grow: 1;">📧 Send Report</button>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-card"><span>Total Assets</span><h2 id="totalCount">0</h2></div>
+            <div class="stat-card"><span>Premium (DA 50+)</span><h2 id="premiumCount">0</h2></div>
+            <div class="stat-card"><span>Total Value</span><h2 id="marketVal">$0</h2></div>
+        </div>
+
+        <div class="filter-area">
+            <input type="text" id="searchInput" placeholder="Search URL..." onkeyup="applyFilters()">
+            <select id="daFilter" onchange="applyFilters()">
+                <option value="0">All Authority</option>
+                <option value="30">DA 30+</option>
+                <option value="50">DA 50+</option>
+                <option value="70">DA 70+</option>
+            </select>
+            <select id="riskFilter" onchange="applyFilters()">
+                <option value="all">All Status</option>
+                <option value="safe">Safe Only</option>
+                <option value="risk">Risk Only</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Website URL</th>
+                        <th>DA</th>
+                        <th>Risk Status</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryBody"></tbody>
+            </table>
+        </div>
+
+        <p style="text-align: center; font-size: 12px; color: #94a3b8; margin-top: 20px;">
+            Powered by <a href="https://nichorraiapp.com" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: bold;">Nichorr AI System</a>
+        </p>
+    </div>
+
+    <div id="clientModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0;">Add New Client</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <input type="text" id="newClientName" placeholder="Client Name">
+                <input type="email" id="newClientEmail" placeholder="Client Email">
+                <input type="text" id="newClientWeb" placeholder="Client Website (Optional)">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="saveClient()" class="btn btn-csv" style="flex: 1;">Save</button>
+                    <button onclick="closeModal()" class="btn btn-back" style="flex: 1;">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let masterData = [];
+        let savedClients = [];
+
+        async function init() {
+            await loadInventory();
+            await loadClients();
+        }
+
+        async function loadInventory() {
+            try {
+                const response = await fetch('/api/nichorr/inventory');
+                const result = await response.json();
+                if(result.success) {
+                    masterData = result.data;
+                    renderTable(masterData);
+                    updateStats(masterData);
+                }
+            } catch (err) { console.error("Load failed"); }
+        }
+
+        async function loadClients() {
+    try {
+        const response = await fetch('/api/nichorr/clients');
+        const result = await response.json();
+        if(result.success) {
+            savedClients = result.data;
+            const dropdown = document.getElementById('clientDropdown');
+            // Dropdown ko reset karein aur naye clients bharein
+            dropdown.innerHTML = '<option value="">-- No Client Selected --</option>';
+            savedClients.forEach(client => {
+                dropdown.innerHTML += `<option value="${client._id}">${client.clientName}</option>`;
+            });
+        }
+    } catch (err) {
+        console.error("Clients load karne mein masla:", err);
+    }
+}
+
+        async function clearInventory() {
+    if(!confirm("Kya aap waqai saara data delete karna chahte hain?")) return;
+    
+    try {
+        // Path ko check karein, agar base URL use kar rahe hain to wahi lagayein
+        const res = await fetch('/api/nichorr/inventory/clear', { 
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        
+        const result = await res.json();
+        if(result.success) {
+            alert("Inventory Saaf ho gayi!");
+            location.reload(); // Page reload kar dein taake table khali dikhe
+        } else {
+            alert("Server Error: " + result.message);
+        }
+    } catch (err) { 
+        console.error(err);
+        alert("Delete fail ho gaya! Connection check karein."); 
+    }
+}
+
+       function renderTable(data) {
+            const body = document.getElementById('inventoryBody');
+            if (!body) return;
+
+            body.innerHTML = data.map(link => {
+                const displayEmail = (link.ownerEmail && link.ownerEmail !== 'Not Found') ? link.ownerEmail : '';
+                const subject = `Guest Post Inquiry: ${link.websiteUrl}`;
+                const bodyText = `Hi ${link.adminName || 'Admin'},%0D%0A%0D%0AI was checking ${link.websiteUrl} and I'm really impressed with your content. I'm interested in a guest post collaboration to provide some high-quality value to your readers.%0D%0A%0D%0ACould you please let me know your requirements and process?%0D%0A%0D%0ABest Regards,`;
+
+                return `
+                <tr>
+                    <td>
+                        <div style="margin-bottom: 4px;">
+                            <strong>${link.websiteUrl}</strong>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <small style="color: #64748b; font-size: 11px;">👤 ${link.adminName || 'Admin'}</small>
+                            <input type="text" value="${displayEmail}" 
+                                   placeholder="Enter Email..." 
+                                   onblur="updateManualEmail('${link._id}', this.value)"
+                                   style="font-size: 10px; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 2px 5px; width: 140px; outline: none;">
+                        </div>
+                    </td>
+                    <td>
+                        <b style="color: var(--accent); font-size: 15px;">${link.authorityScore}</b><br>
+                        <span class="badge ${link.spamScore < 5 ? 'badge-safe' : 'badge-risk'}" style="font-size: 8px; padding: 2px 5px; text-transform: uppercase;">
+                            ${link.spamScore < 5 ? 'Safe' : 'Risk'}
+                        </span>
+                    </td>
+                    <td>
+                        <select onchange="updateOutreachStatus('${link._id}', this.value)" 
+                                style="padding: 6px; border-radius: 6px; font-size: 11px; border: none; cursor: pointer;
+                                background: ${getStatusColor(link.outreachStatus)}; color: white; font-weight: bold; width: 100%;">
+                            <option value="Pending" ${link.outreachStatus === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Contacted" ${link.outreachStatus === 'Contacted' ? 'selected' : ''}>Contacted</option>
+                            <option value="Negotiating" ${link.outreachStatus === 'Negotiating' ? 'selected' : ''}>Negotiating</option>
+                            <option value="Completed" ${link.outreachStatus === 'Completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    </td>
+                    <td>
+                        <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+                            <span style="font-weight: bold; color: var(--primary);">$${(link.authorityScore * 3.5).toLocaleString()}</span>
+                            <a href="mailto:${link.ownerEmail}?subject=${subject}&body=${bodyText}" 
+                               onclick="updateOutreachStatus('${link._id}', 'Contacted')"
+                               style="text-decoration: none; font-size: 10px; background: var(--primary); color: white; padding: 6px 10px; border-radius: 5px; text-align: center; width: 100%; display: block; font-weight: 600;">
+                               📧 Send Pitch
+                            </a>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Contacted': return '#eab308';
+                case 'Negotiating': return '#3b82f6';
+                case 'Completed': return '#22c55e';
+                default: return '#94a3b8';
+            }
+        }
+
+        function updateStats(data) {
+            document.getElementById('totalCount').innerText = data.length;
+            const premium = data.filter(d => d.authorityScore >= 50).length;
+            const totalVal = data.reduce((acc, curr) => acc + (curr.authorityScore * 3.5), 0);
+            document.getElementById('premiumCount').innerText = premium;
+            document.getElementById('marketVal').innerText = "$" + totalVal.toLocaleString();
+        }
+
+        function applyFilters() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const minDA = parseInt(document.getElementById('daFilter').value);
+            const risk = document.getElementById('riskFilter').value;
+
+            const filtered = masterData.filter(item => {
+                const matchesSearch = item.websiteUrl.toLowerCase().includes(term);
+                const matchesDA = item.authorityScore >= minDA;
+                const matchesRisk = risk === 'all' || 
+                    (risk === 'safe' && item.spamScore < 5) || 
+                    (risk === 'risk' && item.spamScore >= 5);
+                return matchesSearch && matchesDA && matchesRisk;
+            });
+            renderTable(filtered);
+        }
+
+        function openModal() { document.getElementById('clientModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('clientModal').style.display = 'none'; }
+
+        async function saveClient() {
+            const name = document.getElementById('newClientName').value;
+            const email = document.getElementById('newClientEmail').value;
+            const web = document.getElementById('newClientWeb').value;
+            if(!name || !email) return alert("Details required!");
+
+            const res = await fetch('/api/nichorr/clients/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clientName: name, clientEmail: email, businessLink: web })
+            });
+
+            const result = await res.json();
+            if(result.success) {
+                alert("Client Added!");
+                closeModal();
+                loadClients();
+            }
+        }
+
+        async function mailToClient() {
+            const clientId = document.getElementById('clientDropdown').value;
+            if (!clientId) return alert("Pehle client select karein!");
+            const client = savedClients.find(c => c._id === clientId);
+            const currentTableData = Array.from(document.querySelectorAll('#inventoryBody tr')).map(tr => {
+                const tds = tr.querySelectorAll('td');
+                return { websiteUrl: tds[0].innerText, authorityScore: tds[1].innerText };
+            });
+
+            try {
+                const res = await fetch('/api/nichorr/send-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: client.clientEmail,
+                        clientName: client.clientName,
+                        selectedAssets: currentTableData,
+                        websiteLink: "https://nichorraiapp.com"
+                    })
+                });
+                const result = await res.json();
+                alert(result.message);
+            } catch (error) { alert("Email failed!"); }
+        }
+
+        async function updateManualEmail(id, newEmail) {
+            try {
+                await fetch('/api/nichorr/update-outreach-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id, email: newEmail })
+                });
+            } catch (err) { console.error("Update fail"); }
+        }
+
+        async function exportToCSV() {
+            if(masterData.length === 0) return alert("Data empty hai!");
+            let csv = "URL,DA,Value\n";
+            masterData.forEach(d => {
+                csv += `${d.websiteUrl},${d.authorityScore},${(d.authorityScore*3.5)}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Nichorr_Export.csv`;
+            a.click();
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nichorr AI | Global Analysis Engine</title>
+    <style>
+        :root { 
+            --primary: #0f172a; 
+            --accent: #38bdf8; 
+            --success: #22c55e; 
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-light: #94a3b8;
+            --sidebar-width: 260px;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 0; 
+            color: #1e293b;
+            background-color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        #sidebar-container {
+            width: var(--sidebar-width);
+            background: var(--primary);
+            position: fixed;
+            height: 100vh;
+            left: 0; top: 0; z-index: 100;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #1e293b;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0; z-index: 90;
+        }
+
+        .user-pill {
+            display: flex; align-items: center; gap: 10px;
+            background: #f1f5f9; padding: 5px 15px;
+            border-radius: 50px; font-size: 14px; font-weight: 600;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width); 
+            flex-grow: 1;
+            padding-bottom: 50px;
+            min-width: 0;
+        }
+
+        .container { max-width: 850px; margin: 40px auto; width: 100%; padding: 0 20px; box-sizing: border-box; }
+
+        .stats-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .chip { 
+            background: white; padding: 6px 14px; border-radius: 50px; 
+            font-size: 11px; font-weight: 800; border: 1px solid #e2e8f0; 
+            color: var(--primary);
+        }
+
+        .search-box {
+            background: white; padding: 30px; border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0; margin-bottom: 25px;
+        }
+
+        input, textarea { 
+            width: 100%; padding: 15px; border: 2px solid #f1f5f9; 
+            border-radius: 12px; font-size: 15px; margin-bottom: 15px; 
+            outline: none; transition: 0.3s; box-sizing: border-box; background: #f8fafc;
+        }
+        input:focus, textarea:focus { border-color: var(--accent); background: white; }
+
+        .btn-group { display: flex; gap: 12px; }
+
+        .action-btn { 
+            width: 100%; padding: 16px; background: var(--primary); color: white; 
+            border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .action-btn:hover { background: #1e293b; transform: translateY(-1px); }
+        .action-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .btn-secondary { background: var(--accent); color: var(--primary); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #dc2626; }
+
+        .inventory-card {
+            background: linear-gradient(135deg, var(--primary), #1e293b);
+            color: white; padding: 30px; border-radius: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            text-decoration: none; transition: 0.3s;
+            border-bottom: 5px solid var(--accent);
+        }
+        .inventory-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+
+        #progressArea { display: none; margin-top: 20px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .progress-bar-bg { width: 100%; height: 10px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+        #progressBar { width: 0%; height: 100%; background: var(--accent); transition: 0.4s; }
+
+        .section-header { display: flex; align-items: center; gap: 10px; margin: 30px 0 15px 0; }
+        .section-num { background: var(--accent); color: var(--primary); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; }
+        .section-title { font-size: 14px; font-weight: 800; text-transform: uppercase; color: var(--primary); letter-spacing: 0.5px; }
+
+        @media (max-width: 768px) {
+            #sidebar-container { display: none; }
+            .main-content { margin-left: 0; }
+            .top-nav { padding: 15px 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar-container"></div>
+
+    <div class="main-content">
+        <nav class="top-nav">
+            <div class="user-pill">
+                <span id="navUserName">User</span>
+            </div>
+            <a href="#" onclick="handleLogout()" style="color: #ef4444; font-weight: 700; text-decoration: none; font-size: 14px; margin-left: 15px;">Logout 🚪</a>
+        </nav>
+
+        <div class="container">
+            <div class="stats-row">
+                <div style="display: flex; gap: 8px;">
+                    <div class="chip">📡 Status: Live</div>
+                    <div class="chip">📁 Inventory: <span id="assetCount" style="color: var(--accent);">0</span></div>
+                </div>
+                <a href="/pricing.html" style="text-decoration: none;">
+                    <div class="chip" style="background: var(--warning); color: white; border: none;">🔥 UPGRADE TO PRO</div>
+                </a>
+            </div>
+
+            <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <h1 style="font-size: 36px; margin: 0; font-weight: 900;">NICHORR ENGINE</h1>
+                    <p style="color: #64748b; margin: 5px 0;">Welcome back, <span id="displayUserName" style="color: var(--primary); font-weight: 800;">Member</span>! Start your analysis.</p>
+                </div>
+                <div style="text-align: right;">
+                    <div id="planBadge" class="chip" style="background: var(--primary); color: white; margin-bottom: 5px;">FREE STARTER</div>
+                    <div style="font-size: 12px; font-weight: 700; color: var(--text-light);">CREDITS: <span id="displayCredits" style="color: var(--primary);">0</span></div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <div class="section-num">1</div>
+                <div class="section-title">Single URL Audit</div>
+            </div>
+            <div class="search-box">
+                <input type="text" id="targetUrl" placeholder="Enter target URL (e.g. https://example.com)">
+                <button class="action-btn" onclick="runAudit()" id="singleBtn">Analyze Metrics</button>
+            </div>
+
+            <div class="section-header">
+                <div class="section-num">2</div>
+                <div class="section-title">Bulk Processing Hub</div>
+            </div>
+            <div class="search-box">
+                <textarea id="bulkUrls" rows="6" placeholder="Paste bulk URLs here (one per line)..."></textarea>
+                <div class="btn-group">
+                    <button class="action-btn btn-secondary" onclick="runBulkAudit()" id="bulkBtn">Extract All Metrics</button>
+                    <button class="action-btn btn-danger" onclick="clearProcessList()" style="flex: 0.4;">Clear All</button>
+                </div>
+                
+                <div id="progressArea">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 800;">
+                        <span id="progressText" style="color: var(--primary);">Analyzing Assets...</span>
+                        <span id="progressPercent" style="color: var(--accent);">0%</span>
+                    </div>
+                    <div class="progress-bar-bg"><div id="progressBar"></div></div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <div class="section-num">3</div>
+                <div class="section-title">Master Inventory</div>
+            </div>
+            <a href="/inventory.html" class="inventory-card">
+                <div>
+                    <h3 style="margin: 0; font-size: 22px; font-weight: 900;">ACCESS PREMIUM DATABASE</h3>
+                    <p style="margin: 5px 0 0; font-size: 13px; opacity: 0.9;">Manage and export your verified sites.</p>
+                </div>
+                <div style="font-size: 32px;">💎</div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        async function loadSidebar() {
+            try {
+                const response = await fetch('sidebar.html');
+                const html = await response.text();
+                document.getElementById('sidebar-container').innerHTML = html;
+            } catch (err) { console.error("Sidebar initialization failed"); }
+        }
+
+        function loadUserProfile() {
+            const name = localStorage.getItem('userName') || 'User';
+            const email = localStorage.getItem('userEmail');
+            const token = localStorage.getItem('nichorrToken');
+            const credits = localStorage.getItem('userCredits') || 0;
+            const plan = localStorage.getItem('userPlan') || 'free';
+
+            if (!token || !email) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            document.getElementById('navUserName').innerText = name;
+            document.getElementById('displayUserName').innerText = name;
+            document.getElementById('displayCredits').innerText = credits;
+            document.getElementById('planBadge').innerText = plan.toUpperCase() + " PLAN";
+            
+            updateInventoryCount();
+            loadSidebar();
+        }
+
+        function handleLogout() {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        }
+
+        async function updateInventoryCount() {
+            try {
+                const res = await fetch('/api/nichorr/inventory');
+                const data = await res.json();
+                if(data.success) document.getElementById('assetCount').innerText = data.count;
+            } catch (e) { }
+        }
+
+        async function runAudit() {
+            const url = document.getElementById('targetUrl').value.trim();
+            if(!url) return alert("Please enter a valid URL first.");
+            
+            const btn = document.getElementById('singleBtn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/nichorr/analyze-site', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ targetUrl: url, userEmail: localStorage.getItem('userEmail') })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert("Analysis complete. Site saved to inventory.");
+                    updateInventoryCount();
+                } else { alert("Analysis Failed: " + result.message); }
+            } catch (err) { alert("Connectivity Error. Please try again."); }
+            finally { btn.innerText = "Analyze Metrics"; btn.disabled = false; }
+        }
+
+        async function runBulkAudit() {
+            const raw = document.getElementById('bulkUrls').value;
+            const urls = raw.split('\n').map(u => u.trim()).filter(u => u.length > 5);
+            if(urls.length === 0) return alert("Please paste URLs to process.");
+            
+            const btn = document.getElementById('bulkBtn');
+            const progressArea = document.getElementById('progressArea');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+
+            btn.disabled = true;
+            progressArea.style.display = 'block';
+
+            for(let i = 0; i < urls.length; i++) {
+                const percent = Math.round(((i + 1) / urls.length) * 100);
+                progressBar.style.width = percent + "%";
+                progressPercent.innerText = percent + "%";
+
+                try {
+                    await fetch('/api/nichorr/analyze-site', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ targetUrl: urls[i], userEmail: localStorage.getItem('userEmail') })
+                    });
+                } catch (e) { }
+            }
+            
+            btn.disabled = false;
+            btn.innerText = "Extraction Complete!";
+            updateInventoryCount();
+        }
+
+        function clearProcessList() {
+            if(confirm("Are you sure you want to clear the current list and reset processing?")) {
+                document.getElementById('bulkUrls').value = "";
+                document.getElementById('targetUrl').value = "";
+                document.getElementById('progressArea').style.display = 'none';
+                document.getElementById('progressBar').style.width = "0%";
+                document.getElementById('progressPercent').innerText = "0%";
+                document.getElementById('bulkBtn').innerText = "Extract All Metrics";
+                document.getElementById('bulkBtn').disabled = false;
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key.toLowerCase() === 'a') {
+                event.preventDefault();
+                const code = prompt("Admin Authorization Required:");
+                if (code === "LALA786") window.location.href = '/admin-nichorr.html';
+            }
+        });
+
+        window.onload = loadUserProfile;
+    </script>
+</body>
+</html>
