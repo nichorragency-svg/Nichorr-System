@@ -50,19 +50,24 @@ mongoose.connect(mongoURI.trim())
     })
     .catch((err) => console.error('❌ Connection Error:', err.message));
 
-// --- 4. API Endpoints ---
-// Saare Admin, Auth aur Audit routes yahan handle honge
+// --- 4. Public stats (Total Assets on dashboard) ---
+const NichorrLink = require('./models/NichorrLinkModel');
+app.get('/api/stats', async (req, res) => {
+    try {
+        const totalSites = await NichorrLink.countDocuments();
+        res.json({ success: true, totalSites });
+    } catch (err) {
+        console.error('[API] /api/stats error:', err.message);
+        res.status(500).json({ success: false, totalSites: 0, message: err.message });
+    }
+});
+
+// --- 5. API Endpoints ---
 app.use('/api/nichorr', nichorrRoutes);
 // Blog aur Ebook ke routes yahan
 app.use('/api/blogs', blogRoutes); 
 
-/**
- * NOTE: Purana /api/stats route yahan se hata diya gaya hai.
- * Ab saare stats 'NichorrAdminController.getAdminStats' handle karta hai.
- * Dashboard par URL use karein: /api/nichorr/admin/stats
- */
-
-// --- 5. Global Error Handler ---
+// --- 6. Global Error Handler ---
 app.use((err, req, res, next) => {
     console.error("🔥 Server Error:", err.stack);
     res.status(500).json({ 

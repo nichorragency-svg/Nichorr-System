@@ -4,7 +4,7 @@ const Blog = require('../models/Blog');
 const Ebook = require('../models/Ebook');
 const RSSParser = require('rss-parser');
 const { sendGuestPostPitch } = require('../services/OutreachEmail');
-const { analyzeAndPersist, OPERATOR_EMAIL } = require('../utils/analyzeSite');
+const { analyzeAndPersist } = require('../utils/analyzeSite');
 
 const parser = new RSSParser();
 
@@ -16,29 +16,7 @@ const NichorrAdminController = {
         }
 
         try {
-            const isAdmin = userEmail === OPERATOR_EMAIL;
-            let user = null;
-
-            if (!isAdmin) {
-                user = await User.findOne({ email: userEmail });
-                if (!user) return res.status(403).json({ success: false, message: 'User not found.' });
-                const now = new Date();
-                if (user.expiryDate && now > user.expiryDate) {
-                    user.plan = 'free';
-                    await user.save();
-                    return res.status(403).json({ success: false, message: 'Plan expired.' });
-                }
-                if (user.plan === 'free' && user.credits <= 0) {
-                    return res.status(403).json({ success: false, message: 'Credits exhausted.' });
-                }
-            }
-
-            const { link, updated } = await analyzeAndPersist({ targetUrl, category, userEmail, user });
-
-            if (!isAdmin && user && user.plan === 'free' && !updated) {
-                user.credits -= 1;
-                await user.save();
-            }
+            const { link, updated } = await analyzeAndPersist({ targetUrl, category, userEmail });
 
             res.status(updated ? 200 : 201).json({
                 success: true,

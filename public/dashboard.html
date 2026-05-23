@@ -129,7 +129,7 @@
             <a href="/modules/blog/ebooks.html" class="glass-btn">E-BOOKS</a>
             <a href="/categories.html" class="glass-btn">CATEGORIES</a>
             <a href="/modules/inventory.html" class="glass-btn">VAULT</a>
-            <a href="/signup.html" class="glass-btn" style="background: var(--neon-red); border: none; font-weight: bold;">GET STARTED</a>
+            <a href="#auditPanel" id="getStartedBtn" class="glass-btn" style="background: var(--neon-red); border: none; font-weight: bold;">GET STARTED</a>
         </div>
     </nav>
 
@@ -140,11 +140,10 @@
         </div>
 
         <div class="section-title">🔍 DOMAIN DEEP AUDIT</div>
-<div class="audit-section">
+<div id="auditPanel" class="audit-section">
     <div class="search-box">
-        <input type="text" id="domainInput" placeholder="Enter Domain (e.g. producthunt.com)..." onkeydown="if(event.key==='Enter') runSingleAudit()">
-        
-        <button class="glass-btn" onclick="runSingleAudit()" style="background: var(--neon-red); border: none; cursor: pointer;">
+        <input type="text" id="domainInput" placeholder="Enter Domain (e.g. producthunt.com)...">
+        <button type="button" id="auditBtn" class="glass-btn" style="background: var(--neon-red); border: none; cursor: pointer;">
             AUDIT SITE
         </button>
     </div>
@@ -178,72 +177,6 @@
         </div>
     </div>
 
-    <script>
-    // 1. Single Audit Function
-    function runSingleAudit() {
-        const domain = document.getElementById('domainInput').value.trim();
-        
-        if (!domain) {
-            alert("Lala, pehle domain to likho!");
-            return;
-        }
-
-        // Clean domain (remove http/https if user pastes it)
-        const cleanDomain = domain.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
-
-        // Save to Local History
-        saveToHistory(cleanDomain);
-
-        // Redirect to Deep Analysis Page
-        window.location.href = `analysis-report.html?domain=${encodeURIComponent(cleanDomain)}`;
-    }
-
-    // 2. History Save Karne Ka Function
-    function saveToHistory(domain) {
-        let history = JSON.parse(localStorage.getItem('nichorr_history')) || [];
-        
-        // Agar pehle se hai to purana delete karo taake naya uupar aaye
-        history = history.filter(item => item !== domain);
-        history.unshift(domain); // Add to start
-        
-        // Max 5 tags rakhein
-        if (history.length > 5) history.pop();
-        
-        localStorage.setItem('nichorr_history', JSON.stringify(history));
-        renderHistory();
-    }
-
-    // 3. History Tags Show Karne Ka Function
-    function renderHistory() {
-        const historyContainer = document.getElementById('searchHistory');
-        const history = JSON.parse(localStorage.getItem('nichorr_history')) || [];
-        
-        historyContainer.innerHTML = history.map(site => `
-            <span class="history-tag" onclick="document.getElementById('domainInput').value='${site}'; runSingleAudit();">
-                ${site}
-            </div>
-        `).join('');
-    }
-
-    // Page load par history dikhao
-    window.onload = () => {
-        loadDashboardStats(); // Aapka purana function
-        renderHistory();
-    };
-</script>
-    <script>
-        async function loadDashboardStats() {
-            try {
-                const response = await fetch('/api/stats');
-                const data = await response.json();
-                if (data.success) {
-                    document.getElementById('totalAssets').innerText = data.totalSites;
-                }
-            } catch (error) {
-                document.getElementById('totalAssets').innerText = "ERROR";
-            }
-        }
-        window.onload = loadDashboardStats;
-    </script>
+    <script src="/js/dashboard.js"></script>
 </body>
 </html>

@@ -215,15 +215,10 @@
             const credits = localStorage.getItem('userCredits') || 0;
             const plan = localStorage.getItem('userPlan') || 'free';
 
-            if (!token || !email) {
-                window.location.href = '/login.html';
-                return;
-            }
-
             document.getElementById('navUserName').innerText = name;
             document.getElementById('displayUserName').innerText = name;
-            document.getElementById('displayCredits').innerText = credits;
-            document.getElementById('planBadge').innerText = plan.toUpperCase() + " PLAN";
+            document.getElementById('displayCredits').innerText = token ? credits : 'Unlimited';
+            document.getElementById('planBadge').innerText = (token ? plan : 'open').toUpperCase() + ' ACCESS';
             
             updateInventoryCount();
             loadSidebar();
