@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nichorr Operator Dashboard</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px 48px; }
+        h1 { font-size: 1.5rem; margin: 0 0 6px; }
+        .sub { color: #64748b; font-size: 0.95rem; margin-bottom: 24px; }
+        .card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .card h2 { margin: 0 0 12px; font-size: 1.1rem; }
+        label { display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
+        input[type="text"], input[type="email"] {
+            width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem;
+        }
+        input:focus { outline: none; border-color: #3b82f6; }
+        .btn {
+            width: 100%; margin-top: 12px; padding: 14px; border: none; border-radius: 12px;
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+        }
+        .btn-scan { background: #0f172a; color: #fff; }
+        .btn-scan:disabled { opacity: 0.6; }
+        .btn-pitch {
+            background: #2563eb; color: #fff; padding: 10px 14px; width: auto; font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        .btn-pitch:disabled { background: #94a3b8; }
+        .empty { text-align: center; color: #94a3b8; padding: 24px; }
+        .site-row {
+            display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+            padding: 14px 0; border-bottom: 1px solid #e2e8f0;
+        }
+        .site-row:last-child { border-bottom: none; }
+        .site-info { flex: 1; min-width: 180px; }
+        .site-info strong { display: block; word-break: break-all; }
+        .site-info small { color: #64748b; }
+        .badge { display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .badge.done { background: #dcfce7; color: #166534; }
+        .spinner { display: none; text-align: center; color: #2563eb; font-size: 0.9rem; margin-top: 10px; }
+        .spinner.show { display: block; }
+        .toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            padding: 14px 20px; border-radius: 12px; color: #fff; font-weight: 600;
+            max-width: 92%; text-align: center; z-index: 100; display: none;
+        }
+        .toast.ok { background: #059669; display: block; }
+        .toast.err { background: #dc2626; display: block; }
+        .email-edit { width: 100%; margin-top: 6px; padding: 8px; font-size: 0.85rem; border: 1px dashed #cbd5e1; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>Operator Dashboard</h1>
+        <p class="sub">Scan sites, then send outreach emails in one click.</p>
+
+        <section class="card">
+            <h2>1. Quick Hunter</h2>
+            <label for="siteUrl">Website link</label>
+            <input type="text" id="siteUrl" placeholder="example.com or https://example.com">
+            <button type="button" class="btn btn-scan" id="scanBtn">Scan &amp; Add Site</button>
+            <p id="scanSpinner" class="spinner">Scanning website and saving to vault...</p>
+        </section>
+
+        <section class="card">
+            <h2>2. Action Vault <span class="badge" id="pendingCount">0 pending</span></h2>
+            <div id="vaultList"><p class="empty">Loading...</p></div>
+        </section>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="/js/operator-dashboard.js"></script>
+</body>
+</html>

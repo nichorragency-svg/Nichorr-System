@@ -5,9 +5,12 @@ const NichorrLinkSchema = new mongoose.Schema({
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     
     websiteUrl: { type: String, required: true, unique: true },
+    siteTitle: { type: String, default: '' },
+    metaDescription: { type: String, default: '' },
     category: { type: String, default: "General" }, 
     authorityScore: { type: Number, default: 0 },   
-    spamScore: { type: Number, default: 0 },        
+    spamScore: { type: Number, default: 0 },
+    estimatedValue: { type: Number, default: 0 },
     monthlyTraffic: { type: String, default: "N/A" },
     
     // 🍋 OUTREACH DATA (Naya Maal)

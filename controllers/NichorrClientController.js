@@ -1,5 +1,13 @@
 const NichorrClient = require('../models/NichorrClient');
+const NichorrLink = require('../models/NichorrLinkModel');
 const nodemailer = require('nodemailer');
+const { sendGuestPostPitch } = require('../services/OutreachEmail');
+
+function requireMailConfig() {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        throw new Error('EMAIL_USER and EMAIL_PASS must be set in .env');
+    }
+}
 
 // 1. Naya Client Add Karna
 exports.addClient = async (req, res) => {
@@ -23,14 +31,44 @@ exports.getClients = async (req, res) => {
 };
 
 // 3. Email Bhejne ka System
+exports.sendPitch = async (req, res) => {
+    const { id, targetEmail, adminName, websiteUrl } = req.body;
+    try {
+        requireMailConfig();
+        const link = await NichorrLink.findById(id);
+        if (!link) return res.status(404).json({ success: false, message: 'Site not found.' });
+
+        const email = (targetEmail || link.ownerEmail || '').trim();
+        if (!email || email === 'Not Found') {
+            return res.status(400).json({ success: false, message: 'Valid email required.' });
+        }
+
+        await sendGuestPostPitch({
+            targetEmail: email,
+            adminName: adminName || link.adminName,
+            websiteUrl: websiteUrl || link.websiteUrl,
+            siteTitle: link.siteTitle,
+            category: link.category
+        });
+
+        link.outreachStatus = 'Contacted';
+        await link.save();
+        res.json({ success: true, message: 'Pitch sent.', data: link });
+    } catch (err) {
+        console.error('[ClientEmail] sendPitch error:', err.message);
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+
 exports.sendEmail = async (req, res) => {
     const { email, clientName, selectedAssets, websiteLink } = req.body;
 
     try {
+        requireMailConfig();
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: process.env.EMAIL_USER, 
+                user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
             }
         });
@@ -100,7 +138,7 @@ exports.sendEmail = async (req, res) => {
         `;
 
         await transporter.sendMail({
-            from: '"Nichorr AI" <your-email@gmail.com>',
+            from: `"Nichorr AI" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: `SEO Strategy: New Assets for ${clientName}`,
             html: htmlBody
