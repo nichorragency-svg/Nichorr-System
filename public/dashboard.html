@@ -18,9 +18,37 @@
             color: #e5e7eb;
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding-top: 0;
+            padding-top: 80px;
         }
 
+        .nichorr-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 70px;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 1000;
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .nav-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-red);
+            object-fit: cover;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+            transition: 0.5s;
+        }
+        .nav-logo:hover { transform: rotate(360deg); }
+        .nav-brand { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: bold; }
+
+        .nav-links { display: flex; gap: 10px; flex-wrap: wrap; }
         .glass-btn {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -88,7 +116,19 @@
 </head>
 <body>
 
-    <div data-nichorr-nav></div>
+    <nav class="nichorr-nav">
+        <div class="nav-left">
+            <img src="/images/nichorr-logo.png" alt="Nichorr AI Logo" class="nav-logo">
+            <span class="nav-brand">NICHORR <span style="color: var(--neon-red);">AI</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="/modules/blog/blog.html" class="glass-btn">INSIGHTS BLOG</a>
+            <a href="/modules/blog/ebooks.html" class="glass-btn">E-BOOKS</a>
+            <a href="/categories.html" class="glass-btn">CATEGORIES</a>
+            <a href="/modules/inventory.html" class="glass-btn">VAULT</a>
+            <a href="#auditPanel" id="getStartedBtn" class="glass-btn" style="background: var(--neon-red); border: none; font-weight: bold;">GET STARTED</a>
+        </div>
+    </nav>
 
     <div class="dashboard-wrapper">
         <div class="hero-heading">
@@ -134,7 +174,6 @@
         </div>
     </div>
 
-    <script src="/js/site-nav.js"></script>
     <script src="/js/dashboard.js"></script>
 </body>
 </html>
