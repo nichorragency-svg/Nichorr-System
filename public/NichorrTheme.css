@@ -28,3 +28,96 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: 24px;
 }
+
+/* --- Global top navigation --- */
+body.has-nichorr-nav { padding-top: 72px; }
+
+.nichorr-top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    padding: 10px 20px;
+    background: rgba(3, 7, 18, 0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.nichorr-top-nav.theme-light {
+    position: sticky;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.nav-brand-block { display: flex; align-items: center; }
+.nav-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+}
+.nav-logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ef4444;
+    object-fit: cover;
+}
+.nav-brand-text {
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #f8fafc;
+}
+.theme-light .nav-brand-text { color: #0f172a; }
+.nav-accent { color: #ef4444; }
+
+.nav-links-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link {
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 10px;
+    color: #cbd5e1;
+    border: 1px solid transparent;
+    transition: 0.2s;
+}
+.theme-light .nav-link { color: #475569; }
+.nav-link:hover {
+    color: #fff;
+    border-color: rgba(59, 130, 246, 0.5);
+    background: rgba(59, 130, 246, 0.15);
+}
+.theme-light .nav-link:hover {
+    color: #0f172a;
+    background: #f1f5f9;
+}
+.nav-link-cta {
+    background: #2563eb;
+    color: #fff !important;
+    border-color: #2563eb;
+}
+.nav-link-cta:hover { background: #1d4ed8; }
+
+@media (max-width: 640px) {
+    body.has-nichorr-nav { padding-top: 120px; }
+    .nichorr-top-nav { padding: 10px 12px; }
+    .nav-links-row { width: 100%; justify-content: center; }
+    .nav-link { flex: 1 1 auto; text-align: center; font-size: 0.65rem; padding: 8px 6px; }
+}

@@ -38,15 +38,18 @@
 
         .top-nav {
             background: white;
-            padding: 15px 40px;
+            padding: 12px 24px;
             display: flex;
-            justify-content: flex-end;
+            flex-wrap: wrap;
+            justify-content: space-between;
             align-items: center;
-            gap: 20px;
+            gap: 12px;
             border-bottom: 1px solid #e2e8f0;
             position: sticky;
-            top: 0; z-index: 90;
+            top: 0;
+            z-index: 90;
         }
+        .top-nav-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 
         .user-pill {
             display: flex; align-items: center; gap: 10px;
@@ -128,10 +131,13 @@
 
     <div class="main-content">
         <nav class="top-nav">
-            <div class="user-pill">
-                <span id="navUserName">User</span>
+            <div data-nichorr-nav data-theme="light"></div>
+            <div class="top-nav-actions">
+                <div class="user-pill">
+                    <span id="navUserName">User</span>
+                </div>
+                <a href="#" onclick="handleLogout(); return false;" style="color: #ef4444; font-weight: 700; text-decoration: none; font-size: 14px;">Logout</a>
             </div>
-            <a href="#" onclick="handleLogout()" style="color: #ef4444; font-weight: 700; text-decoration: none; font-size: 14px; margin-left: 15px;">Logout 🚪</a>
         </nav>
 
         <div class="container">
@@ -140,8 +146,8 @@
                     <div class="chip">📡 Status: Live</div>
                     <div class="chip">📁 Inventory: <span id="assetCount" style="color: var(--accent);">0</span></div>
                 </div>
-                <a href="/pricing.html" style="text-decoration: none;">
-                    <div class="chip" style="background: var(--warning); color: white; border: none;">🔥 UPGRADE TO PRO</div>
+                <a href="/dashboard.html" style="text-decoration: none;">
+                    <div class="chip" style="background: var(--accent); color: #0f172a; border: none;">Command Center</div>
                 </a>
             </div>
 
@@ -314,5 +320,6 @@
 
         window.onload = loadUserProfile;
     </script>
+    <script src="/js/site-nav.js"></script>
 </body>
 </html>

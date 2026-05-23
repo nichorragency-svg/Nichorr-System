@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nichorr Operator Dashboard</title>
+    <link rel="stylesheet" href="/NichorrTheme.css">
     <style>
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
@@ -52,6 +53,7 @@
     </style>
 </head>
 <body>
+    <div data-nichorr-nav></div>
     <div class="wrap">
         <h1>Operator Dashboard</h1>
         <p class="sub">Scan sites, then send outreach emails in one click.</p>
@@ -71,6 +73,7 @@
     </div>
 
     <div id="toast" class="toast"></div>
+    <script src="/js/site-nav.js"></script>
     <script src="/js/operator-dashboard.js"></script>
 </body>
 </html>

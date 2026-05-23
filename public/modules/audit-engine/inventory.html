@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/images/nichorr-logo.png">
     <title>Nichorr AI | Asset Inventory</title>
-    
+    <link rel="stylesheet" href="/NichorrTheme.css">
     <style>
         :root { --primary: #0f172a; --accent: #38bdf8; --success: #22c55e; --danger: #ef4444; }
         
@@ -90,14 +90,15 @@
     </style>
 </head>
 <body>
+    <div data-nichorr-nav data-theme="light"></div>
     <div class="container">
         <div class="header">
             <div class="logo-area">
-                <img src="https://via.placeholder.com/40x40?text=N" alt="Nichorr AI">
+                <img src="/images/nichorr-logo.png" alt="Nichorr AI">
                 <h1>Asset Inventory</h1>
             </div>
             <div class="btn-group">
-                <a href="/" class="btn btn-back">← Back</a>
+                <a href="/dashboard.html" class="btn btn-back">Dashboard</a>
                 <button onclick="clearInventory()" class="btn btn-clear">🗑️ Clear List</button>
                 <button onclick="exportToCSV()" class="btn btn-csv">📥 Export CSV</button>
             </div>
@@ -171,6 +172,7 @@
         </div>
     </div>
 
+    <script src="/js/site-nav.js"></script>
     <script src="/js/inventory-api.js"></script>
     <script>
         let masterData = [];
