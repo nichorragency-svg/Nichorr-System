@@ -1,6 +1,8 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const MODEL = 'gemini-1.5-flash';
+// gemini-1.5-flash was retired; use stable v1 + current Flash model
+const MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+const API_VERSION = 'v1';
 const PLATFORM = 'Visithon Cards';
 
 function buildPrompt(topic, category, platformFocus) {
@@ -27,10 +29,14 @@ async function generateArticle(topic, category, platformFocus = PLATFORM) {
 
     if (!topic || !category) throw new Error('topic and category are required');
 
-    console.log('[GeminiService] Generating article:', topic);
+    console.log('[GeminiService] Generating article:', topic, '| model:', MODEL);
 
     const genAI = new GoogleGenerativeAI(key);
-    const model = genAI.getGenerativeModel({ model: MODEL });
+    const model = genAI.getGenerativeModel(
+        { model: MODEL },
+        { apiVersion: API_VERSION }
+    );
+
     const result = await model.generateContent(buildPrompt(topic, category, platformFocus));
     const text = result.response.text();
     const data = parseJson(text);

@@ -23,10 +23,14 @@ app.use(express.static('public'));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads'))); 
 
 // --- 3. Database Connection & Server Logic ---
-const cloudURI = "mongodb+srv://nichorr-agency:Nichorr123456@ammad.6mbkige.mongodb.net/Nichorr_System?retryWrites=true&w=majority&appName=Ammad";
-const mongoURI = process.env.MONGO_URI || cloudURI;
+const mongoURI = process.env.MONGO_URI;
+if (!mongoURI || !mongoURI.trim()) {
+    throw new Error(
+        'MONGO_URI is not set. Add MONGO_URI to your .env file (e.g. mongodb+srv://user:pass@cluster/dbname).'
+    );
+}
 
-mongoose.connect(mongoURI)
+mongoose.connect(mongoURI.trim())
     .then(() => {
         console.log('✅ Nichorr AI Database Connected!');
         // VERCEL FIX: Local par chaly ga toh listen kary ga, Vercel khud handle kary ga
